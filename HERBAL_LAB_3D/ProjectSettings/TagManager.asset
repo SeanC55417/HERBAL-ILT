@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Button
+  - Floor
   layers:
   - Default
   - TransparentFX
