@@ -25,15 +25,30 @@ public class HplcSceneScript : MonoBehaviour
         OpenHplcTraySlot,
         PlaceTrayInHplc,
         CloseHplcTraySlot,
+
+        EnterMethod,
+
+        KnowledgeCheck2Q1,
+        KnowledgeCheck2Q2,
+        
+        SelectPump,
+        AssignSamples,
         RunHplc,
 
-        KnowledgeCheck2,
-        KnowledgeCheck3,
-        KnowledgeCheck4
+        KnowledgeCheck3Q1,
+        KnowledgeCheck3Q2,
+    
+        KnowledgeCheck4Q1,
+        KnowledgeCheck4Q2,
+
+        Done
     }
     
     private InstructionScript instruction;
+    private NotebookScript notebook;
     private GameStep currentStep;
+    private GameObject computerScreen = null;
+
     public TextMeshProUGUI hud_text;
 
     void Start()
@@ -57,9 +72,30 @@ public class HplcSceneScript : MonoBehaviour
             Debug.LogError("InstructionScript not found!");
         }
 
+        GameObject notebookObject = GameObject.Find("Notebook");
+
+        if (notebookObject != null)
+        {
+            notebook = notebookObject.GetComponent<NotebookScript>();
+        }
+
+        // Ensure the script is found before trying to call its methods
+        if (notebook != null)
+        {
+            Debug.Log("Notebook Script Found");
+            notebook.postText("Instrument Parameters");
+        }
+        else
+        {
+            Debug.LogError("NotebookScript not found!");
+        }
+
         // Initialize the first game step
-        // currentStep = GameStep.OpenFireCabinet;
-        currentStep = GameStep.CloseHplcOven;
+        currentStep = GameStep.OpenFireCabinet;
+        // currentStep = GameStep.CloseHplcTraySlot;
+
+        hud_text.text = "Welcome to the HplcLab!\nOpen the fire cabinet to begin lab";
+
     }
 
     void Update()
@@ -79,6 +115,7 @@ public class HplcSceneScript : MonoBehaviour
                 {
                     CompleteStep(GameStep.BringMethanolToHplc, "Bring the methanol to the HPLC");
                     instruction.postBulletPointWithTab("Select the organic solvent from the cabinet and move to the B slot in the rack above the HPLC", "-Hint: CH3OH");
+                    notebook.postText("\nPolar Sol. A: Water");
                 }
                 break;
             case GameStep.BringMethanolToHplc:
@@ -86,6 +123,7 @@ public class HplcSceneScript : MonoBehaviour
                 {
                     CompleteStep(GameStep.OpenHplcOven, "Open the Hplc Oven");
                     instruction.postBulletPointWithTab("Equip the HPLC with the C18 column from the drawer below the computer", "-Hint: Pre-Column comes first");
+                    notebook.postText("\nOrganic Sol. B: Methanol");
                 }
                 break;
             case GameStep.OpenHplcOven:
@@ -104,6 +142,7 @@ public class HplcSceneScript : MonoBehaviour
                 if (IsRbObjectSet("ColumnRod"))
                 {
                     CompleteStep(GameStep.CloseHplcOven, "Close HPLC oven");
+                    notebook.postText("\nColumn: Phenomenex Kinetex C18 (4.6 x 150 mm) 100 Å");
                 }
                 break;
             case GameStep.CloseHplcOven:
@@ -164,9 +203,90 @@ public class HplcSceneScript : MonoBehaviour
             case GameStep.CloseHplcTraySlot:
                 if (!IsTraySlotOpen()) 
                 {
-                    CompleteStep(GameStep.RunHplc, "Run HPLC");
+                    CompleteStep(GameStep.EnterMethod, "Enter method on computer");
                 }
                 break;
+            case GameStep.EnterMethod:
+                if (ChildrenInParent("PC Screen Menu Mode Canvas") == 1){
+                    CompleteStep(GameStep.KnowledgeCheck2Q1, "Press M to bring up the notebook to do KnowledgeCheck2");
+                    instruction.postKnowledgeCheck("Question3");
+                }
+                break;
+
+            case GameStep.KnowledgeCheck2Q1:
+                int answered = instruction.getNumAnswered();
+                if (instruction.getNumAnswered() > 2){
+                    CompleteStep(GameStep.KnowledgeCheck2Q2, "");
+                    instruction.postKnowledgeCheck("Question4");
+                }
+                break;
+            case GameStep.KnowledgeCheck2Q2:
+                if (instruction.getNumAnswered() > 3){
+                    CompleteStep(GameStep.SelectPump, "Awesome!\nBack onto the computer click the \"Pump ON\" button");
+                    GameObject pumpButton = GameObject.Find("Pump Button");
+                    Collider collider = pumpButton.GetComponent<Collider>();
+                    collider.enabled = true;
+                }
+                break;
+            case GameStep.SelectPump:
+                computerScreen = GameObject.Find("Screen");
+                if (computerScreen != null)
+                {
+                    GameObject batchScreen = GameObject.Find("PC Screen Batch Mode Canvas");
+                    if (batchScreen != null)
+                    {
+                        CompleteStep(GameStep.AssignSamples, "Assign samples (Optional for now) then click Start");
+                    }
+                }
+                break;
+            case GameStep.AssignSamples:
+                computerScreen = GameObject.Find("Screen");
+                if (computerScreen != null)
+                {
+                    MeshRenderer meshRenderer = computerScreen.GetComponent<MeshRenderer>();
+                    if (meshRenderer != null)
+                    {
+                        Material material = meshRenderer.material;
+                        if (material != null && material.name == "8 (Instance)")
+                        {
+                            CompleteStep(GameStep.RunHplc, "Run HPLC");
+                        }
+                    }
+                }
+                break;
+            case GameStep.RunHplc:
+                GameObject allGraphsScreen = GameObject.Find("PC Screen Graphs");
+                if (allGraphsScreen != null){
+                    CompleteStep(GameStep.KnowledgeCheck3Q1, "Press M to bring up the notebook to do KnowledgeCheck3");
+                    instruction.postKnowledgeCheck("Question5");
+                }
+                break;
+            case GameStep.KnowledgeCheck3Q1:
+                if (instruction.getNumAnswered() > 4){
+                    CompleteStep(GameStep.KnowledgeCheck3Q2, "");
+                    instruction.postKnowledgeCheck("Question6");
+                }
+                break;
+            case GameStep.KnowledgeCheck3Q2:
+                if (instruction.getNumAnswered() > 5){
+                    CompleteStep(GameStep.KnowledgeCheck4Q1, "Use the graphs for the next set of questions");
+                    instruction.postKnowledgeCheck("Question7");
+                }
+                break;
+            case GameStep.KnowledgeCheck4Q1:
+                if (instruction.getNumAnswered() > 6){
+                    CompleteStep(GameStep.KnowledgeCheck4Q2, "");
+                    instruction.postKnowledgeCheck("Question8");
+                }
+                break;
+            case GameStep.KnowledgeCheck4Q2:
+                if (instruction.getNumAnswered() > 7){
+                    CompleteStep(GameStep.Done, "Congratulations you finished the module, use the notebook to exit the module");
+                }
+                break;
+            case GameStep.Done:
+                break;
+
             // Add more cases for each step as needed
         }
     }
@@ -274,6 +394,23 @@ public class HplcSceneScript : MonoBehaviour
         }
         return num;
     }
+
+    int ChildrenInParent(string objectName)
+    {
+        GameObject parentObject = GameObject.Find(objectName);
+
+        if (parentObject != null)
+        {
+            int childCount = parentObject.transform.childCount;
+            return childCount;
+        }
+        else
+        {
+            Debug.LogWarning("Parent object not found: " + objectName);
+            return -1;
+        }
+    }
+
 
     void CompleteStep(GameStep nextStep, string instructionMessage)
     {

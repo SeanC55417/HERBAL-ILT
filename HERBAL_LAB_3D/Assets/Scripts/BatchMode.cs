@@ -25,6 +25,7 @@ public class BatchMode : MonoBehaviour
     public Material image6;
     public Material image7;
     public Material image8;
+    public GameObject startBatch;
 
     private int iterator = 1;
 
@@ -32,6 +33,11 @@ public class BatchMode : MonoBehaviour
     {
         BatchButton.transform.localPosition = new Vector3(-247, 33, -1000);
         addBatchTable.transform.localPosition = new Vector3(-3, -96, 0);
+    }
+
+    public void startRunning()
+    {
+        startBatch.SetActive(true);
     }
 
     public void makeBarkExtractAppear()
@@ -94,5 +100,47 @@ public class BatchMode : MonoBehaviour
             selection2.transform.localPosition = new Vector3(-138, 0, 0);
             iterator = 2;
         }
+    }
+
+    public void AutoComplete()
+    {
+        StartCoroutine(AutoCompleteCoroutine());
+    }
+
+    private IEnumerator AutoCompleteCoroutine()
+   {
+        for (int i = 2; i <= 8; i += 1) // Start at image2 and iterate up to image8
+        {
+            // Set the screen material to the appropriate image
+            switch (i)
+            {
+                case 2:
+                    Screen.GetComponent<MeshRenderer>().material = image2;
+                    break;
+                case 3:
+                    Screen.GetComponent<MeshRenderer>().material = image3;
+                    break;
+                case 4:
+                    Screen.GetComponent<MeshRenderer>().material = image4;
+                    break;
+                case 5:
+                    Screen.GetComponent<MeshRenderer>().material = image5;
+                    break;
+                case 6:
+                    Screen.GetComponent<MeshRenderer>().material = image6;
+                    break;
+                case 7:
+                    Screen.GetComponent<MeshRenderer>().material = image7;
+                    break;
+                case 8:
+                    Screen.GetComponent<MeshRenderer>().material = image8;
+                    break;
+            }
+
+            // Wait for 0.2 seconds before changing to the next image
+            yield return new WaitForSeconds(0.2f);
+        }
+
+
     }
 }

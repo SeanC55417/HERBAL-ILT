@@ -72,12 +72,10 @@ public class InstructionScript : MonoBehaviour
 
     public void getQuestions()
     {
-        string csvFilePath = "Assets/Prefabs/Notebook Assets/Questions.csv";
+        TextAsset csvFile = Resources.Load<TextAsset>("Data/Questions");
 
-        // Open the file to read from
-        using (StreamReader sr = new StreamReader(csvFilePath))
+        using (StringReader sr = new StringReader(csvFile.text))
         {
-            // Read all lines from the stream into a list
             List<string> lines = new List<string>();
             string line;
 
@@ -406,7 +404,8 @@ public class InstructionScript : MonoBehaviour
             buttonImage.color = colors.disabledColor;
             giveHint();
         }
-
+        Collider collider = button.GetComponent<Collider>();
+        collider.enabled = false;
         // writeToFile("Student Answer: " + buttonText.text[0], studentID);
     }
 

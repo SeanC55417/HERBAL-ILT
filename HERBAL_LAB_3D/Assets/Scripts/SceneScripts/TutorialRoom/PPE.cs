@@ -12,7 +12,6 @@ public class PPE : MonoBehaviour
     public Transform ppe;                           // Object containing ppe
     public GameObject[] initialPPEObjects;          // Initial state of PPE objects
     public int confettiTime = 3;                    // Seconds
-    public string completionText = "Add Text";      // "You did it!"
 
     public float rotationSpeed = 360.0f; // Degrees per second
     public int numberOfSpins = 3;
@@ -25,7 +24,6 @@ public class PPE : MonoBehaviour
         if (ppe.childCount == 0 && !hasChecked)
         {
             hasChecked = true;
-            playerHudText.text = completionText;
             StartConfetti();
             this.enabled = false;
         }
@@ -79,9 +77,7 @@ public class PPE : MonoBehaviour
     IEnumerator StopConfettiAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        playerHudText.text = "";
         confetti.Stop();
-        tutorialManager.AdvanceTutorial();
     }
 
     public void ResetPPECheck()

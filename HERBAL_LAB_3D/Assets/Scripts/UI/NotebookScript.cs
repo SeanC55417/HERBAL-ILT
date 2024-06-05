@@ -21,14 +21,55 @@ public class NotebookScript : MonoBehaviour
     public GameObject prefabContainer;
     List<string> waitingForStudentList = new List<string>();
     bool deletePriors = false;
+    public GameObject ElutionPrefab;
     
     // Start is called before the first frame update
     void Start()
     {
         InstantiateContainer();
         typeOfTest["solventPrefab"] = new string[] {"MiscibilityTest.solvent1", "MiscibilityTest.solvent2", "Phenomenex Kinetex C18 (4.6 x 150 mm) 100 Å", "0.4 ml/min", "30C", "254 nm"};
+        typeOfTest["Elution Image"] = new string[] {};
         // postText("Welcome to the Notebook. Here is where your data will be recorded.\n");
     }
+
+    public void button1()
+    {
+        postText("Instrument Parameters");
+    }
+    public void button2()
+    {
+        postText("\nPolar Sol. A: ");
+    }
+    public void button3()
+    {
+        postText("\nOrganic Sol. B: ");
+    }
+    public void button4()
+    {
+        postText("\nColumn: Phenomenex Kinetex C18 (4.6 x 150 mm) 100 Å");
+    }
+    public void button5()
+    {
+        postText("\nFlow Rate: 0.4ml/min");
+    }
+    public void button6()
+    {
+        postText("\nOven Temp: 30C");
+    }
+    public void button7()
+    {
+        postText("\nObserved Wavelength: 254 nm");
+    }
+    public void button8()
+    {
+        postText("\nElution Pattern");
+    }
+    public void button9()
+    {
+        postPrefab(ElutionPrefab);
+    }
+
+
 
     void InstantiateContainer()
     {

@@ -15,20 +15,7 @@ public class ControlsTutorial : MonoBehaviour
             if (!hasMoved) // Check if this is the first movement
             {
                 hasMoved = true; // Set the flag so this block won't run again
-                CompleteMovementTask(); // Notify that the movement task is complete
             }
-        }
-    }
-
-    private void CompleteMovementTask()
-    {
-        if (tutorialManager != null)
-        {
-            tutorialManager.AdvanceTutorial(); // Call the method to advance the tutorial
-        }
-        else
-        {
-            Debug.LogError("TutorialManager reference not set in TutorialMovement.");
         }
     }
 }

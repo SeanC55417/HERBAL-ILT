@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
 using System.Text.RegularExpressions;
 using TMPro;
 
 public class InfoCard : MonoBehaviour
 {
     public GameManager gameManager;
-
     public GameObject infoCard;
-    public string moduleInfoCsvPath;
 
     public int sceneNumber = 0;
     public TextMeshProUGUI title;
@@ -21,12 +18,19 @@ public class InfoCard : MonoBehaviour
     // This function shows the card with the information for the specified sceneId
     public void ShowCard(int sceneId)
     {
-
         infoCard.SetActive(true);
     
         Dictionary<string, string> dataForID = new Dictionary<string, string>();
 
-        using (var reader = new StreamReader(moduleInfoCsvPath))
+        // Load the CSV file from the Resources folder
+        TextAsset csvFile = Resources.Load<TextAsset>("Data/ModuleInfo");
+        if (csvFile == null)
+        {
+            Debug.LogError("Failed to load CSV file from Resources.");
+            return;
+        }
+
+        using (var reader = new System.IO.StringReader(csvFile.text))
         {
             // Read and parse the first line to get scene IDs
             string headerLine = reader.ReadLine();
@@ -50,7 +54,7 @@ public class InfoCard : MonoBehaviour
                 return;
             }
 
-            while (!reader.EndOfStream)
+            while (reader.Peek() != -1)
             {
                 var line = reader.ReadLine();
                 var values = ParseCSVLine(line);

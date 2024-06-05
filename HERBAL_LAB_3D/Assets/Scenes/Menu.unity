@@ -1648,7 +1648,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 5b525c3dcd0484105b87863e9ebf6e10, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 61290d57294b14ea88c18f6bd969ffdf, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -5192,7 +5192,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 7c6702e708b4f45ecaeca3a3c8be9e18, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 22fe9910a784e41d28176f40b77de84e, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -9690,7 +9690,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 343509867}
   infoCard: {fileID: 1482268572}
-  moduleInfoCsvPath: Assets/Data/ModuleInfo.csv
   sceneNumber: 0
   title: {fileID: 1423762312}
   description: {fileID: 1310399873}

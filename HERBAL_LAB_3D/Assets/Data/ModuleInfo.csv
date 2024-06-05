@@ -1,7 +1,0 @@
-ID,1,2
-Title,Tutorial Room, HPLC Lab
-ImagePath, ModuleImgs/TutorialRoom, ModuleImgs/HPLCLab
-Description,"Upon completing this module, you will be familiar with movement, object interactions, and the general controls available.", "In this module you will learn the basics of using a High Precision Liquid Chromatography (HPLC) and reading a Chromatograph."
-Assessment, None, Quiz
-Time, 15, 30
-SceneName, TutorialRoom, HPLCLab

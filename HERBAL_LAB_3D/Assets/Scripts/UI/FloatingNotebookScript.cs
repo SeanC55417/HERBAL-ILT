@@ -19,7 +19,7 @@ public class FloatingNotebookScript : MonoBehaviour
             Debug.LogError("Menu Transform is not set.");
         }
 
-        setNotebook();
+        // setNotebook();
     }
 
     private void setNotebook()

@@ -15,6 +15,7 @@ TagManager:
   - noSplit
   - textBox
   - SampleBottle
+  - Flask
   layers:
   - Default
   - TransparentFX
