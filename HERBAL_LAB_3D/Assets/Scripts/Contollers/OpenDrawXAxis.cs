@@ -17,7 +17,7 @@ public class OpenDrawXAxis : MonoBehaviour
         // Initialize the drawer to the closed position
         // transform.localPosition = startingPosition;
         // Store the initial position and rotation
-        startingPosition = transform.position;
+        startingPosition = transform.localPosition;
     }
 
     void FixedUpdate()

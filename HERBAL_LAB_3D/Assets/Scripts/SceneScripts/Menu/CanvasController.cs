@@ -39,4 +39,10 @@ public class CanvasController : MonoBehaviour
 
         ShowCanvas(newCanvas); // Show the new canvas and update the current canvas
     }
+
+    public void ChangeCanvasFrom(Canvas current, Canvas newCanvas)
+    {
+        HideCanvas(current);
+        ShowCanvas(newCanvas);
+    }
 }

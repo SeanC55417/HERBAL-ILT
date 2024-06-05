@@ -54,9 +54,9 @@ public class PickupObject : MonoBehaviour
         }
     }
 
-    void Drop()
+    public void Drop()
     {
-        if (heldObject.GetComponent<Rigidbody>())
+        if (heldObject && heldObject.GetComponent<Rigidbody>())
         {
             Rigidbody heldRb = heldObject.GetComponent<Rigidbody>();
             heldRb.useGravity = true;
@@ -65,6 +65,11 @@ public class PickupObject : MonoBehaviour
             heldObject.transform.parent = null;
             heldObject = null;
         }
+    }
+
+    public GameObject GetObject()
+    {
+        return heldObject;
     }
 
     void RotationReset(GameObject pickObject)
