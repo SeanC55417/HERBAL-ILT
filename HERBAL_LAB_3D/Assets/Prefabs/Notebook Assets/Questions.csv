@@ -1,0 +1,9 @@
+Key,Questions,,,,,Hint,Correct Answer(s)
+Question1,What does HPLC stand for?,A. High-Performance Liquid Chromatography,B. Highly Polarized Liquid Compound,C. Medium-Pressure Liquid Chromatography,D. Hyperbolic Polymerization and Liquid Crystallization,(HINT: liquid mobile phases),A
+Question2,What is an example of a reverse phase solvent?,A. Hexane,B. Benzene,C. Ethanol,D. Methanol,(HINT: solvent B used in this HPLC experiment),D
+Question3,"With a flow rate of 0.4 mL/min for improved separation of molecules in a complex mixture, what type of gradient are we using?",A. High-pressure,B. Low-pressure,C. Isocratic,,(HINT: medium pressure liquid chromatography can have flow rates around 30 mL/min),B
+Question4,Chromatography separates the components in a mixture based on polarity.,A. True,B. False,,,(HINT: polar versus nonpolar solvent systems),A
+Question5,What is the output (data) that you collect after running an HPLC?,A. Chromatogram,B. Chromatography,C. Diagram,D. Fluorescence,(HINT: singular usage - not referring to the technique itself),A
+Question6,The amount of time that a molecule spends in a column is defined as its…,A. Vacation time,B. Condensation time,C. Retention time,D. Analysis time,(HINT: how long a molecule is retained on the column),C
+Question7,You obtained a chromatogram for pure Taxol. What’s the retention time of this isolated peak?,A. 21.815,B. 3.304,C. 28.789,,,A
+Question8,"After reviewing the chromatograms, which part of the plant contains the most Taxol (select all that apply)?",A. Bark,B. Leaves,C. Fruit,,(HINT: retention times may be slightly different; refer to the mAU values on the y-axis; this is representative of relative abundances),A B

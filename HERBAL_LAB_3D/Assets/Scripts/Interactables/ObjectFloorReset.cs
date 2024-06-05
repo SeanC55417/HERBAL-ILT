@@ -8,6 +8,8 @@ public class ObjectFloorReset : MonoBehaviour
     private Quaternion startingRotation; // To store the initial rotation
     private Rigidbody rb; // Reference to the Rigidbody component
     private float resetDelay = 0.5f;
+    private float checkInterval = 1.0f; // Interval in seconds for periodic checks
+    private float fallThreshold = -10.0f; // Height below which the object is considered fallen too low
 
     void Start()
     {
@@ -21,6 +23,9 @@ public class ObjectFloorReset : MonoBehaviour
         {
             Debug.LogWarning("Rigidbody component missing from GameObject - required for physics reset.");
         }
+
+        // Start the periodic check
+        InvokeRepeating("CheckIfFallenTooLow", checkInterval, checkInterval);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -36,13 +41,28 @@ public class ObjectFloorReset : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        if (rb != null);
+        if (rb != null)
         {
             // Reset position, rotation, and velocities
             transform.position = startingPosition;
             transform.rotation = startingRotation;
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+        }
+    }
+
+    void CheckIfFallenTooLow()
+    {
+        if (transform.position.y < fallThreshold)
+        {
+            // Reset position, rotation, and velocities
+            if (rb != null)
+            {
+                transform.position = startingPosition;
+                transform.rotation = startingRotation;
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
         }
     }
 }

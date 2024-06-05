@@ -6,11 +6,20 @@ TagManager:
   tags:
   - Button
   - Floor
+  - ColumnRod
+  - Methanol
+  - Water
+  - Tray
+  - UpdateText
+  - Prefab
+  - noSplit
+  - textBox
+  - SampleBottle
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Floor
   - Water
   - UI
   - 

@@ -7,7 +7,8 @@ public class PickupObject : MonoBehaviour
     public Transform player;
     public Transform playerCamera;
     public float pickupRange = 5f;
-    public float holdDistance = 2f;
+    public float defaultHoldDistance = 2f;
+    private float currentHoldDistance;
     private GameObject heldObject;
 
     void Update()
@@ -19,7 +20,7 @@ public class PickupObject : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(playerCamera.position, playerCamera.forward, out hit, pickupRange))
                 {
-                    Pickup(hit.transform.gameObject);
+                    Pickup(hit.transform.gameObject, hit.distance);
                 }
             }
             else
@@ -36,7 +37,7 @@ public class PickupObject : MonoBehaviour
         }
     }
 
-    void Pickup(GameObject pickObject)
+    void Pickup(GameObject pickObject, float distance)
     {
         if (pickObject.GetComponent<Rigidbody>())
         {
@@ -44,15 +45,18 @@ public class PickupObject : MonoBehaviour
             objectRb.useGravity = false;
             objectRb.drag = 10;
 
+            // Set the hold distance to the distance at which the object was picked up
+            currentHoldDistance = distance < defaultHoldDistance ? distance : defaultHoldDistance;
+
             objectRb.transform.parent = playerCamera;
-            objectRb.transform.localPosition = new Vector3(0f, 0f, holdDistance);
+            objectRb.transform.localPosition = new Vector3(0f, 0f, currentHoldDistance);
             heldObject = pickObject;
         }
     }
 
-    void Drop()
+    public void Drop()
     {
-        if (heldObject.GetComponent<Rigidbody>())
+        if (heldObject && heldObject.GetComponent<Rigidbody>())
         {
             Rigidbody heldRb = heldObject.GetComponent<Rigidbody>();
             heldRb.useGravity = true;
@@ -63,6 +67,11 @@ public class PickupObject : MonoBehaviour
         }
     }
 
+    public GameObject GetObject()
+    {
+        return heldObject;
+    }
+
     void RotationReset(GameObject pickObject)
     {
         Rigidbody objectRb = pickObject.GetComponent<Rigidbody>();
@@ -70,7 +79,7 @@ public class PickupObject : MonoBehaviour
         {
             objectRb.angularVelocity = Vector3.zero; // Stop any ongoing rotation
             objectRb.transform.localRotation = Quaternion.Euler(0f, 90f, 0f); // Reset the rotation
-            objectRb.transform.localPosition = new Vector3(0f, 0f, holdDistance); // Reset position in front of player
+            objectRb.transform.localPosition = new Vector3(0f, 0f, currentHoldDistance); // Reset position in front of player
         }
     }
 }
