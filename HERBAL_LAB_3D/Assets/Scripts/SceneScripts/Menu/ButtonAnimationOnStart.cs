@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;  // Include to work with UI components like CanvasGroup
+using UnityEngine.UI;
 
 public class ButtonAnimationOnStart : MonoBehaviour
 {
@@ -9,6 +9,8 @@ public class ButtonAnimationOnStart : MonoBehaviour
     public float horizontalEnd = 0f;    // Ending x-position (final position)
     public float durationSec = 2f;      // Duration of the animation in seconds
     public float staggerDelay = 0.5f;   // Delay between starting animations of consecutive buttons
+
+    private int animationsRemaining;    // Counter to track remaining animations
 
     // Coroutine to fade in and slide a button with delay
     IEnumerator FadeInAndSlide(GameObject button, float delay)
@@ -19,7 +21,7 @@ public class ButtonAnimationOnStart : MonoBehaviour
         float timeElapsed = 0;
         CanvasGroup canvasGroup = button.GetComponent<CanvasGroup>();
         RectTransform rect = button.GetComponent<RectTransform>();
-        
+
         if (canvasGroup == null)
             canvasGroup = button.AddComponent<CanvasGroup>();  // Add CanvasGroup if not present
 
@@ -42,12 +44,32 @@ public class ButtonAnimationOnStart : MonoBehaviour
         canvasGroup.alpha = 1;
         rect.localPosition = endPosition;
 
-        canvasGroup.interactable = true;
+        // Decrease the counter when this animation is done
+        animationsRemaining--;
+        if (animationsRemaining == 0)
+        {
+            EnableAllButtons();
+        }
+    }
+
+    // Enable interaction for all buttons
+    void EnableAllButtons()
+    {
+        foreach (GameObject button in buttons)
+        {
+            CanvasGroup canvasGroup = button.GetComponent<CanvasGroup>();
+            if (canvasGroup != null)
+            {
+                canvasGroup.interactable = true;
+            }
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        animationsRemaining = buttons.Length; // Set the counter to the number of buttons
+
         // Start the animation for each button with staggered delays
         float currentDelay = 0;
         foreach (GameObject button in buttons)
@@ -63,5 +85,4 @@ public class ButtonAnimationOnStart : MonoBehaviour
             currentDelay += staggerDelay;  // Increment the delay for the next button
         }
     }
-
 }

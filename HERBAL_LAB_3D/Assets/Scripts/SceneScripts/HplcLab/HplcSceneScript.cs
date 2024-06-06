@@ -32,6 +32,7 @@ public class HplcSceneScript : MonoBehaviour
         KnowledgeCheck2Q2,
         
         SelectPump,
+        SelectQuickBatch,
         AssignSamples,
         RunHplc,
 
@@ -92,7 +93,6 @@ public class HplcSceneScript : MonoBehaviour
 
         // Initialize the first game step
         currentStep = GameStep.OpenFireCabinet;
-        // currentStep = GameStep.CloseHplcTraySlot;
 
         hud_text.text = "Welcome to the HplcLab!\nOpen the fire cabinet to begin lab";
 
@@ -207,12 +207,11 @@ public class HplcSceneScript : MonoBehaviour
                 }
                 break;
             case GameStep.EnterMethod:
-                if (ChildrenInParent("PC Screen Menu Mode Canvas") == 1){
+                if (ChildrenInParent("PC Screen Menu Mode Canvas") == 2){
                     CompleteStep(GameStep.KnowledgeCheck2Q1, "Press M to bring up the notebook to do KnowledgeCheck2");
                     instruction.postKnowledgeCheck("Question3");
                 }
                 break;
-
             case GameStep.KnowledgeCheck2Q1:
                 int answered = instruction.getNumAnswered();
                 if (instruction.getNumAnswered() > 2){
@@ -229,6 +228,14 @@ public class HplcSceneScript : MonoBehaviour
                 }
                 break;
             case GameStep.SelectPump:
+                GameObject pumpRunningCanvas;
+                pumpRunningCanvas = GameObject.Find("Pump Running Canvas");
+
+                if (pumpRunningCanvas != null){
+                    CompleteStep(GameStep.SelectQuickBatch, "Select \"Quick Batch\" on the computer");
+                }
+                break;
+            case GameStep.SelectQuickBatch:
                 computerScreen = GameObject.Find("Screen");
                 if (computerScreen != null)
                 {
