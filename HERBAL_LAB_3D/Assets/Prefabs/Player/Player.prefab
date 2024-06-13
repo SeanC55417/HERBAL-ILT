@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1984422174077071}
   - component: {fileID: 8539214141883643331}
   - component: {fileID: 5453462172041250369}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +195,7 @@ GameObject:
   - component: {fileID: 900705541372387246}
   - component: {fileID: 3672830859622306784}
   - component: {fileID: 6951899573222457114}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 751551255072256113}
   - component: {fileID: 1056754481783822767}
   - component: {fileID: 6326984521502315350}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 3165909252106652528}
   menuTransform: {fileID: 751551255072256113}
-  offset: {x: 0, y: 0, z: 2}
+  offset: {x: 0, y: 0, z: 1.5}
   isVisible: 1
   maxDistance: 3
 --- !u!114 &6326984521502315350
@@ -396,7 +396,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5838465942931116159}
   - component: {fileID: 4781560534758284706}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Instructions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -444,7 +444,6 @@ MonoBehaviour:
   pageContainer: {fileID: 6986405134074986667, guid: a039693d4921c47f7b4b3c1d05b1418e, type: 3}
   pageTextPrefab: {fileID: 3283747184924394634, guid: db2fe1ea90d314b019ef2aaeceb35af8, type: 3}
   QuestionEmptyObject: {fileID: 8493112505987117396, guid: 67e0ca5132c1944939f6d8c742e3c62a, type: 3}
-  confetti: {fileID: 0}
 --- !u!1 &1266860320587770496
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,7 +454,7 @@ GameObject:
   m_Component:
   - component: {fileID: 536746292692689549}
   - component: {fileID: 8755640677225611924}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Icons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -503,7 +502,7 @@ GameObject:
   - component: {fileID: 4466342011628010111}
   - component: {fileID: 9092375107006399739}
   - component: {fileID: 7003368052157515320}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Nav Main Menu Button
   m_TagString: Button
   m_Icon: {fileID: 0}
@@ -656,7 +655,7 @@ GameObject:
   - component: {fileID: 8613545400937189625}
   - component: {fileID: 4802116304989222059}
   - component: {fileID: 928895042591344675}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Instructions Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -791,7 +790,7 @@ GameObject:
   - component: {fileID: 3099264586253513927}
   - component: {fileID: 9008927024232406053}
   - component: {fileID: 1409734746328386673}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Options Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -891,7 +890,7 @@ GameObject:
   - component: {fileID: 5175498306022814792}
   - component: {fileID: 8835835118834444419}
   - component: {fileID: 3387410141158808655}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Notebook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -958,7 +957,7 @@ GameObject:
   - component: {fileID: 1154537406855737066}
   - component: {fileID: 3522520403357476941}
   - component: {fileID: 8207068052653572609}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1211,7 +1210,7 @@ GameObject:
   - component: {fileID: 319152939846888107}
   - component: {fileID: 4535267821436492148}
   - component: {fileID: 7720137575289422533}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Next
   m_TagString: Button
   m_Icon: {fileID: 0}
@@ -1384,7 +1383,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: 0.3499999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1120373818180729827}
   m_Father: {fileID: 3676255347580839145}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &8754170506107203813
@@ -1472,7 +1472,7 @@ GameObject:
   - component: {fileID: 6032473564240764510}
   - component: {fileID: 533486646003284042}
   - component: {fileID: 5016000412129213583}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1608,7 +1608,7 @@ GameObject:
   - component: {fileID: 459348242121631486}
   - component: {fileID: 3881585110517787438}
   - component: {fileID: 6092008971225140824}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Back Button
   m_TagString: Button
   m_Icon: {fileID: 0}
@@ -1924,7 +1924,7 @@ GameObject:
   - component: {fileID: 7197800240689520432}
   - component: {fileID: 2201033448211312355}
   - component: {fileID: 988403127190122865}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Menu Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2002,7 +2002,7 @@ GameObject:
   - component: {fileID: 3334690835871326238}
   - component: {fileID: 1077430594028768648}
   - component: {fileID: 2662993325211550273}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pages
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2075,7 +2075,7 @@ GameObject:
   - component: {fileID: 5960782292586173176}
   - component: {fileID: 2545358222157594279}
   - component: {fileID: 2621135455502990569}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Back
   m_TagString: Button
   m_Icon: {fileID: 0}
@@ -2230,7 +2230,7 @@ GameObject:
   - component: {fileID: 9194452849337540268}
   - component: {fileID: 6303986512607436860}
   - component: {fileID: 7308234377883205773}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Menu Options Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2342,7 +2342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3480757206044433976}
   - component: {fileID: 3747093689486599505}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pages
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2407,7 +2407,7 @@ GameObject:
   - component: {fileID: 3898368974132232754}
   - component: {fileID: 6749790079993384742}
   - component: {fileID: 2474977741729413775}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Next
   m_TagString: Button
   m_Icon: {fileID: 0}
@@ -2549,6 +2549,98 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 250, y: 65, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6431406685775422029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1120373818180729827}
+  - component: {fileID: 7404810757854105529}
+  - component: {fileID: 1113473081682176944}
+  m_Layer: 0
+  m_Name: Menu Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1120373818180729827
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6431406685775422029}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7962905511857777113}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &7404810757854105529
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6431406685775422029}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 3
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 64
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!81 &1113473081682176944
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6431406685775422029}
+  m_Enabled: 1
 --- !u!1 &6609214653210318028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2562,7 +2654,7 @@ GameObject:
   - component: {fileID: 2209787939510199420}
   - component: {fileID: 6668673226601386587}
   - component: {fileID: 7037227078590548403}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Notebook Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2675,7 +2767,7 @@ GameObject:
   - component: {fileID: 7229331497583085211}
   - component: {fileID: 6406996172641801524}
   - component: {fileID: 4198935678279621453}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2809,7 +2901,7 @@ GameObject:
   - component: {fileID: 9071705310341888168}
   - component: {fileID: 7766458634950236859}
   - component: {fileID: 3897732940583346087}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2945,7 +3037,7 @@ GameObject:
   - component: {fileID: 7837324407214263817}
   - component: {fileID: 5179134004649737139}
   - component: {fileID: 3265741577093958668}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Back
   m_TagString: Button
   m_Icon: {fileID: 0}
@@ -3234,7 +3326,7 @@ GameObject:
   - component: {fileID: 94673067735977734}
   - component: {fileID: 3614551811886885805}
   - component: {fileID: 7085783247099701793}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Menu
   m_TagString: Button
   m_Icon: {fileID: 0}
@@ -3385,7 +3477,7 @@ GameObject:
   - component: {fileID: 6924985775055377414}
   - component: {fileID: 2963111730026715550}
   - component: {fileID: 7011649996807550350}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Reset Modue Button
   m_TagString: Button
   m_Icon: {fileID: 0}
@@ -3538,7 +3630,7 @@ GameObject:
   - component: {fileID: 5847440645590461186}
   - component: {fileID: 4269960556393386145}
   - component: {fileID: 6577124559885423137}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3775,7 +3867,7 @@ GameObject:
   - component: {fileID: 5791435577493422169}
   - component: {fileID: 8999445539454420400}
   - component: {fileID: 5813352833736631070}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Notebook Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}

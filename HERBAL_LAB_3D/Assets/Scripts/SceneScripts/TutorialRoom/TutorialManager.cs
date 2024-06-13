@@ -6,6 +6,7 @@ using TMPro;
 public class TutorialManager : MonoBehaviour
 {
     public TextMeshProUGUI playerHudText;   // Text
+    public Confetti confetti;
 
     public enum GameStep{
         walk,
@@ -37,12 +38,13 @@ public class TutorialManager : MonoBehaviour
                 if (ppeObj != null){
                     int childCount = ppeObj.transform.childCount;
                     if (childCount == 0){
-                        CompleteStep(GameStep.moveObject, "Picking up and dropping items is done with the \'E\' key, think equip\n\n Pick up and move Flask from pillar 1 to pillar 2");
+                        CompleteStep(GameStep.moveObject, "Pick up the Flask with the \'E\' key and move it from pillar 1 to pillar 2\n\nIf you ever need to reset the objects position in your hand press the \'Space Bar\'");
                     }
                 }
                 break;
             case GameStep.moveObject:
                 if (IsRbObjectSet("Flask")){
+                    confetti.StartConfetti("", 10);
                     CompleteStep(GameStep.openNotebook, "Congrats!\nOpen the menu panel with \'M\', click the menu button and exit or restart module");
                 }
                 break;

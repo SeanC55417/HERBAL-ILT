@@ -24,7 +24,6 @@ public class PPE : MonoBehaviour
         if (ppe.childCount == 0 && !hasChecked)
         {
             hasChecked = true;
-            StartConfetti();
             this.enabled = false;
         }
 
