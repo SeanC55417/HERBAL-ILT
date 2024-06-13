@@ -44,7 +44,7 @@ public class TutorialManager : MonoBehaviour
                 break;
             case GameStep.moveObject:
                 if (IsRbObjectSet("Flask")){
-                    confetti.StartConfetti("", 10);
+                    confetti.StartConfetti("", 10f);
                     CompleteStep(GameStep.openNotebook, "Congrats!\nOpen the menu panel with \'M\', click the menu button and exit or restart module");
                 }
                 break;
@@ -68,7 +68,9 @@ public class TutorialManager : MonoBehaviour
             {
                 return true; // Invariant if kinematic object is set
             }
+            Debug.Log("ERROR 2");
         }
+        Debug.Log("ERROR 1");
         return false;
     }
 
