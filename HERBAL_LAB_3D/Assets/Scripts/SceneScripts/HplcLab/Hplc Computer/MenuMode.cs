@@ -93,6 +93,12 @@ public class MenuMode : MonoBehaviour
         box7 = true;
     }
 
+    public void onClickDeleteSelfPump()
+    {
+        Destroy(PumpButton.gameObject);
+
+    }
+
     public void batchSpawn()
     {
         checkAllBoxes();

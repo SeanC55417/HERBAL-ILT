@@ -33,8 +33,6 @@ public class InstructionScript : MonoBehaviour
     // public Sprite uncheckedCheckBox;
     // public Sprite checkedCheckBox;
 
-    public Confetti confetti;
-
     bool hintGiven = false;
 
     void Start()
@@ -395,7 +393,6 @@ public class InstructionScript : MonoBehaviour
         {
             // Debug.Log("Correct answer: " + buttonText.text[0]);
             buttonImage.color = colors.selectedColor;
-            confetti.StartConfetti("Correct", 5);
             questionsAnswered += 1;
         }
         else

@@ -18,10 +18,11 @@ public class HplcSceneScript : MonoBehaviour
         KnowledgeCheck1Q1,
         KnowledgeCheck1Q2,
         
-        LoadToTray1,
-        LoadToTray2,
-        LoadToTray3,
-        LoadToTray4,
+        // LoadToTray1,
+        // LoadToTray2,
+        // LoadToTray3,
+        // LoadToTray4,
+
         OpenHplcTraySlot,
         PlaceTrayInHplc,
         CloseHplcTraySlot,
@@ -51,6 +52,7 @@ public class HplcSceneScript : MonoBehaviour
     private GameObject computerScreen = null;
 
     public TextMeshProUGUI hud_text;
+    public Confetti confetti;
 
     void Start()
     {
@@ -161,33 +163,34 @@ public class HplcSceneScript : MonoBehaviour
                 break;
             case GameStep.KnowledgeCheck1Q2:
                 if (instruction.getNumAnswered() > 1){
-                    CompleteStep(GameStep.LoadToTray1, "Add samples to tray (0/4)");
-                }
-                break;
-            case GameStep.LoadToTray1:
-                if(NumRbSetByTag("SampleBottle", 4) > 0)
-                {
-                    CompleteStep(GameStep.LoadToTray2, "Add samples to tray (1/4)");
-                }
-                break;
-            case GameStep.LoadToTray2:
-                if(NumRbSetByTag("SampleBottle", 4) > 1)
-                {
-                    CompleteStep(GameStep.LoadToTray3, "Add samples to tray (2/4)");
-                }
-                break;
-            case GameStep.LoadToTray3:
-                if(NumRbSetByTag("SampleBottle", 4) > 2)
-                {
-                    CompleteStep(GameStep.LoadToTray4, "Add samples to tray (3/4)");
-                }
-                break;
-            case GameStep.LoadToTray4:
-                if(NumRbSetByTag("SampleBottle", 4) > 3)
-                {
                     CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC tray slot");
+                    // CompleteStep(GameStep.LoadToTray1, "Add samples to tray (0/4)");
                 }
                 break;
+            // case GameStep.LoadToTray1:
+            //     if(NumRbSetByTag("SampleBottle", 4) > 0)
+            //     {
+            //         CompleteStep(GameStep.LoadToTray2, "Add samples to tray (1/4)");
+            //     }
+            //     break;
+            // case GameStep.LoadToTray2:
+            //     if(NumRbSetByTag("SampleBottle", 4) > 1)
+            //     {
+            //         CompleteStep(GameStep.LoadToTray3, "Add samples to tray (2/4)");
+            //     }
+            //     break;
+            // case GameStep.LoadToTray3:
+            //     if(NumRbSetByTag("SampleBottle", 4) > 2)
+            //     {
+            //         CompleteStep(GameStep.LoadToTray4, "Add samples to tray (3/4)");
+            //     }
+            //     break;
+            // case GameStep.LoadToTray4:
+            //     if(NumRbSetByTag("SampleBottle", 4) > 3)
+            //     {
+            //         CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC tray slot");
+            //     }
+            //     break;
             case GameStep.OpenHplcTraySlot:
                 if(IsTraySlotOpen())
                 {
@@ -203,7 +206,8 @@ public class HplcSceneScript : MonoBehaviour
             case GameStep.CloseHplcTraySlot:
                 if (!IsTraySlotOpen()) 
                 {
-                    CompleteStep(GameStep.EnterMethod, "Enter method on computer");
+                    CompleteStep(GameStep.EnterMethod, "Enter method on computer, by clicking to fill parameters");
+                    FlashHplcButtons();
                 }
                 break;
             case GameStep.EnterMethod:
@@ -225,6 +229,7 @@ public class HplcSceneScript : MonoBehaviour
                     GameObject pumpButton = GameObject.Find("Pump Button");
                     Collider collider = pumpButton.GetComponent<Collider>();
                     collider.enabled = true;
+                    ButtonIsFlashing("Pump Button", true);
                 }
                 break;
             case GameStep.SelectPump:
@@ -233,6 +238,7 @@ public class HplcSceneScript : MonoBehaviour
 
                 if (pumpRunningCanvas != null){
                     CompleteStep(GameStep.SelectQuickBatch, "Select \"Quick Batch\" on the computer");
+                    ButtonIsFlashing("Batch Button", true);
                 }
                 break;
             case GameStep.SelectQuickBatch:
@@ -243,6 +249,7 @@ public class HplcSceneScript : MonoBehaviour
                     if (batchScreen != null)
                     {
                         CompleteStep(GameStep.AssignSamples, "Assign samples (Optional for now) then click Start");
+                        ButtonIsFlashing("Batch Button", false);
                     }
                 }
                 break;
@@ -287,11 +294,12 @@ public class HplcSceneScript : MonoBehaviour
                 }
                 break;
             case GameStep.KnowledgeCheck4Q2:
-                if (instruction.getNumAnswered() > 7){
-                    CompleteStep(GameStep.Done, "Congratulations you finished the module, use the notebook to exit the module");
+                if (instruction.getNumAnswered() > 8){
+                    CompleteStep(GameStep.Done, "");
                 }
                 break;
             case GameStep.Done:
+                confetti.StartConfetti("Congratulations you finished the module, use the notebook to exit the module", 10);
                 break;
 
             // Add more cases for each step as needed
@@ -417,7 +425,45 @@ public class HplcSceneScript : MonoBehaviour
             return -1;
         }
     }
+    public void ButtonIsFlashing(string button, bool flash)
+    {
+        GameObject batchBtn = GameObject.Find(button);
+        if (batchBtn != null){
+            ButtonFlash buttonFlash = batchBtn.GetComponent<ButtonFlash>();
+            if (buttonFlash != null)
+            {
+                if (flash)
+                {
+                    buttonFlash.StartFlashing();
+                }
+                else 
+                {
+                    buttonFlash.StopFlashing();
+                }
+            }
+        }
+    }
 
+    public void FlashHplcButtons()
+    {
+        GameObject parentObject = GameObject.Find("PC Screen Menu Mode Canvas");
+        if (parentObject != null)
+        {
+            Transform[] hplcParameterBtns = parentObject.GetComponentsInChildren<Transform>();
+            foreach (Transform btnTransform in hplcParameterBtns)
+            {
+                GameObject btn = btnTransform.gameObject;
+                if (btn.name != "Batch Button" && btn.name != "Pump Button")
+                {
+                    ButtonFlash buttonFlash = btn.GetComponent<ButtonFlash>();
+                    if (buttonFlash != null)
+                    {
+                        buttonFlash.StartFlashing();
+                    }
+                }
+            }
+        }
+    }
 
     void CompleteStep(GameStep nextStep, string instructionMessage)
     {

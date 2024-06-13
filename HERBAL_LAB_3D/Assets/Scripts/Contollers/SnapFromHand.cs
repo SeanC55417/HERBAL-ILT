@@ -7,6 +7,7 @@ public class SnapFromHand : MonoBehaviour
     public Transform lockPosition;
     public string tag;
 
+    public float snapSpeed = 5f;
     private GameObject inputObject;
     
     void OnTriggerEnter(Collider other)
@@ -21,7 +22,8 @@ public class SnapFromHand : MonoBehaviour
                 pickupScript.Drop(); // Call Drop() if PickupObject script is found
             }
 
-            inputObject.transform.SetParent(lockPosition);
+            StartCoroutine(SmoothSnap(inputObject.transform));
+
 
             // Destroy Rb
             Rigidbody rb = inputObject.GetComponent<Rigidbody>();
@@ -36,5 +38,21 @@ public class SnapFromHand : MonoBehaviour
             collider.enabled = false;
 
         }
+    }
+
+    private IEnumerator SmoothSnap(Transform objectTransform)
+    {
+        while (Vector3.Distance(objectTransform.position, lockPosition.position) > 0.01f)
+        {
+            objectTransform.position = Vector3.Lerp(objectTransform.position, lockPosition.position, Time.deltaTime * snapSpeed);
+            objectTransform.rotation = Quaternion.Slerp(objectTransform.rotation, lockPosition.rotation, Time.deltaTime * snapSpeed);
+            yield return null;
+        }
+
+        objectTransform.position = lockPosition.position;
+        objectTransform.rotation = lockPosition.rotation;
+
+        // Optionally, parent the object to the lock position
+        objectTransform.SetParent(lockPosition);
     }
 }
