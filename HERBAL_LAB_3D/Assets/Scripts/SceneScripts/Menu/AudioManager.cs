@@ -16,7 +16,7 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);  // Persist the AudioManager across scenes
+            // DontDestroyOnLoad(gameObject);  // Persist the AudioManager across scenes
         }
         else
         {
