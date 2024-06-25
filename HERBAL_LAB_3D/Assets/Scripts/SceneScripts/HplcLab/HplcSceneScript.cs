@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HplcSceneScript : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class HplcSceneScript : MonoBehaviour
         OpenHplcOven,
         OpenDrawer,
         PlaceColumnInHplc,
+        SelectProperFlowDirection,
         CloseHplcOven,
         
         KnowledgeCheck1Q1,
@@ -22,7 +24,6 @@ public class HplcSceneScript : MonoBehaviour
         // LoadToTray2,
         // LoadToTray3,
         // LoadToTray4,
-
         OpenHplcTraySlot,
         PlaceTrayInHplc,
         CloseHplcTraySlot,
@@ -108,7 +109,12 @@ public class HplcSceneScript : MonoBehaviour
                 if (IsFireCabinetOpened())
                 {
                     CompleteStep(GameStep.BringWaterToHplc, "Bring the water to the HPLC");
-                    instruction.postBulletPointWithTab("Select the polar solvent and bring over to the A slot in the rack atop the HPLC", "-Hint: aqueous");
+                    instruction.postBulletPointWithTab("Select the polar solvent and bring over to the A slot in the rack atop the HPLC");
+                    
+                    instruction.postBulletPointWithTab("-Hint: aqueous");
+
+                    Debug.Log("Flash da buttons");
+                    FlashHplcButtons();
                 }
                 break;
                 
@@ -140,6 +146,12 @@ public class HplcSceneScript : MonoBehaviour
                     CompleteStep(GameStep.PlaceColumnInHplc, "Place column into the HPLC");
                 }
                 break;
+            // case GameStep.SelectProperFlowDirection:
+            //     if (IsRbObjectSet("ColumnRod"))
+            //     {
+            //         CompleteStep(GameStep.SelectProperFlowDirection, "Select the proper flow direction");
+            //     }
+            //     break;
             case GameStep.PlaceColumnInHplc:
                 if (IsRbObjectSet("ColumnRod"))
                 {
@@ -164,33 +176,8 @@ public class HplcSceneScript : MonoBehaviour
             case GameStep.KnowledgeCheck1Q2:
                 if (instruction.getNumAnswered() > 1){
                     CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC tray slot");
-                    // CompleteStep(GameStep.LoadToTray1, "Add samples to tray (0/4)");
                 }
                 break;
-            // case GameStep.LoadToTray1:
-            //     if(NumRbSetByTag("SampleBottle", 4) > 0)
-            //     {
-            //         CompleteStep(GameStep.LoadToTray2, "Add samples to tray (1/4)");
-            //     }
-            //     break;
-            // case GameStep.LoadToTray2:
-            //     if(NumRbSetByTag("SampleBottle", 4) > 1)
-            //     {
-            //         CompleteStep(GameStep.LoadToTray3, "Add samples to tray (2/4)");
-            //     }
-            //     break;
-            // case GameStep.LoadToTray3:
-            //     if(NumRbSetByTag("SampleBottle", 4) > 2)
-            //     {
-            //         CompleteStep(GameStep.LoadToTray4, "Add samples to tray (3/4)");
-            //     }
-            //     break;
-            // case GameStep.LoadToTray4:
-            //     if(NumRbSetByTag("SampleBottle", 4) > 3)
-            //     {
-            //         CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC tray slot");
-            //     }
-            //     break;
             case GameStep.OpenHplcTraySlot:
                 if(IsTraySlotOpen())
                 {
@@ -211,7 +198,7 @@ public class HplcSceneScript : MonoBehaviour
                 }
                 break;
             case GameStep.EnterMethod:
-                if (ChildrenInParent("PC Screen Menu Mode Canvas") == 2){
+                if (ChildrenInParent("Set Up Screen") == 3){
                     CompleteStep(GameStep.KnowledgeCheck2Q1, "Press M to bring up the notebook to do KnowledgeCheck2");
                     instruction.postKnowledgeCheck("Question3");
                 }
@@ -242,29 +229,25 @@ public class HplcSceneScript : MonoBehaviour
                 }
                 break;
             case GameStep.SelectQuickBatch:
-                computerScreen = GameObject.Find("Screen");
+                computerScreen = GameObject.Find("Screen Canvas");
                 if (computerScreen != null)
                 {
-                    GameObject batchScreen = GameObject.Find("PC Screen Batch Mode Canvas");
+                    GameObject batchScreen = GameObject.Find("PC Batch Mode Screen");
                     if (batchScreen != null)
                     {
                         CompleteStep(GameStep.AssignSamples, "Assign samples (Optional for now) then click Start");
-                        ButtonIsFlashing("Batch Button", false);
+                                                ButtonIsFlashing("Batch Button", false);
                     }
                 }
                 break;
             case GameStep.AssignSamples:
-                computerScreen = GameObject.Find("Screen");
+                computerScreen = GameObject.Find("Screen Canvas");
                 if (computerScreen != null)
                 {
-                    MeshRenderer meshRenderer = computerScreen.GetComponent<MeshRenderer>();
-                    if (meshRenderer != null)
+                    GameObject runningScreen = GameObject.Find("Running Canvas");
+                    if (runningScreen != null)
                     {
-                        Material material = meshRenderer.material;
-                        if (material != null && material.name == "8 (Instance)")
-                        {
-                            CompleteStep(GameStep.RunHplc, "Run HPLC");
-                        }
+                        CompleteStep(GameStep.RunHplc, "Run HPLC");
                     }
                 }
                 break;
@@ -325,6 +308,27 @@ public class HplcSceneScript : MonoBehaviour
         }
         return false;
     }
+
+    // bool flowDirectionSet()
+    // {
+    //     GameObject FlowDirectionDown = GameObject.Find("Flow Down Color");
+
+    //     if (FlowDirectionDown != null)
+    //     {
+    //         Image imageComponent = FlowDirectionDown.GetComponent<Image>();
+
+    //         if (imageComponent != null)
+    //         {
+    //             Color desiredColor;
+    //             if (ColorUtility.TryParseHtmlString("#05FF00", out desiredColor))
+    //             {
+    //                 return true;
+    //             }
+    //         }
+    //     }
+
+    //     return false;
+    // }
 
     bool IsHplcOvenOpen()
     {
@@ -446,7 +450,7 @@ public class HplcSceneScript : MonoBehaviour
 
     public void FlashHplcButtons()
     {
-        GameObject parentObject = GameObject.Find("PC Screen Menu Mode Canvas");
+        GameObject parentObject = GameObject.Find("Set Up Screen");
         if (parentObject != null)
         {
             Transform[] hplcParameterBtns = parentObject.GetComponentsInChildren<Transform>();
@@ -462,6 +466,9 @@ public class HplcSceneScript : MonoBehaviour
                     }
                 }
             }
+        }
+        else {
+            Debug.Log("Could not find Hplc Screen");
         }
     }
 

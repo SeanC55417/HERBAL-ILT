@@ -9,6 +9,7 @@ public class SnapFromHand : MonoBehaviour
 
     public float snapSpeed = 5f;
     private GameObject inputObject;
+    public List<GameObject> showObjectAfterSnap;
     
     void OnTriggerEnter(Collider other)
     {
@@ -37,6 +38,13 @@ public class SnapFromHand : MonoBehaviour
             Collider collider = lockPosition.GetComponent<Collider>();            
             collider.enabled = false;
 
+            if (showObjectAfterSnap != null)
+            {
+                foreach (GameObject objectToShow in showObjectAfterSnap)
+                {
+                    objectToShow.SetActive(true);
+                }
+            }
         }
     }
 

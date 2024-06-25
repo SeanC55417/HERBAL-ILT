@@ -11,12 +11,15 @@ public class ShrinkObjectTowardsRight : MonoBehaviour
     public GameObject graphImage;
     public GameObject nextScreen;
     public GameObject currentScreen;
-    public Sprite[] sprites; // Declare this as public so you can assign sprites in the Inspector
+    public Sprite[] sprites;
+    public ComputerScreens computerScreensScript;
+    float startingX;
     
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(111.38f, rectTransform.sizeDelta.y); // Adjusted sizeDelta to float
+        startingX = rectTransform.sizeDelta.x;
+        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, rectTransform.sizeDelta.y); // Adjusted sizeDelta to float
     }
 
     private void Update()
@@ -24,15 +27,14 @@ public class ShrinkObjectTowardsRight : MonoBehaviour
         if (isShrinking && transitionProgress < transitionDuration && rectTransform.sizeDelta.x > 0)
         {
             transitionProgress += Time.deltaTime * 30;
-            float newXSize = Mathf.Lerp(111.38f, 0f, transitionProgress / transitionDuration);
+            float newXSize = Mathf.Lerp(startingX, 0f, transitionProgress / transitionDuration);
             rectTransform.sizeDelta = new Vector2(newXSize, rectTransform.sizeDelta.y);
         }
         else if (rectTransform.sizeDelta.x <= 0)
         {
-            rectTransform.sizeDelta = new Vector2(111.38f, rectTransform.sizeDelta.y);
+            rectTransform.sizeDelta = new Vector2(startingX, rectTransform.sizeDelta.y);
             transitionProgress = 0f;
-            NextGraph(); // Call NextGraph() to switch sprite
-            
+            NextGraph();
         }
     }
 
@@ -55,8 +57,9 @@ public class ShrinkObjectTowardsRight : MonoBehaviour
         {
             currentIndex = 0;
             isShrinking = false;
-            currentScreen.SetActive(false);
-            nextScreen.SetActive(true);
+            // currentScreen.SetActive(false);
+            // nextScreen.SetActive(true);
+            computerScreensScript.nextScreen();
         }
 
         // Set the sprite
