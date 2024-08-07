@@ -6407,7 +6407,7 @@ MonoBehaviour:
   Recovery: 1
   Thickness: 1
   CompensateShapeAmount: 0
-  mesh: {fileID: 0}
+  mesh: {fileID: 2904028438643444469, guid: 50f4e8cd655724dc98ff136c21d4d4e3, type: 3}
   rend: {fileID: 605922861}
 --- !u!1001 &606542118
 PrefabInstance:
@@ -6830,7 +6830,7 @@ MonoBehaviour:
   Recovery: 1
   Thickness: 1
   CompensateShapeAmount: 0
-  mesh: {fileID: 0}
+  mesh: {fileID: 2904028438643444469, guid: 50f4e8cd655724dc98ff136c21d4d4e3, type: 3}
   rend: {fileID: 65217441483835615}
 --- !u!1 &654298683
 GameObject:
@@ -9718,6 +9718,11 @@ MeshFilter:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c4f9b9b1f3c06446c9b36af314ca5e9d, type: 3}
   m_PrefabInstance: {fileID: 1982786899}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &897006439 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6609214653210318028, guid: 1e9473fa366994453b4cb41dd2b182c3, type: 3}
+  m_PrefabInstance: {fileID: 1932859389}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &901931189
 GameObject:
@@ -22981,7 +22986,7 @@ MonoBehaviour:
   Recovery: 1
   Thickness: 1
   CompensateShapeAmount: 0
-  mesh: {fileID: 0}
+  mesh: {fileID: 2904028438643444469, guid: 50f4e8cd655724dc98ff136c21d4d4e3, type: 3}
   rend: {fileID: 1876735937}
 --- !u!23 &1876735937
 MeshRenderer:
@@ -23655,7 +23660,7 @@ PrefabInstance:
     - target: {fileID: 1056754481783822767, guid: 1e9473fa366994453b4cb41dd2b182c3, type: 3}
       propertyPath: notebookCanvas
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 897006439}
     - target: {fileID: 3443411897245858328, guid: 1e9473fa366994453b4cb41dd2b182c3, type: 3}
       propertyPath: m_SizeDelta.x
       value: 171.51001
@@ -30639,7 +30644,7 @@ MonoBehaviour:
   Recovery: 1
   Thickness: 1
   CompensateShapeAmount: 0
-  mesh: {fileID: 0}
+  mesh: {fileID: 2904028438643444469, guid: a18db3215716d44ffb5b8b530a76ee45, type: 3}
   rend: {fileID: 65217441371993718}
 --- !u!1 &4064801781578053438
 GameObject:
