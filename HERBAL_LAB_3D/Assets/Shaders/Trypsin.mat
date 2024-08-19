@@ -40,10 +40,10 @@ Material:
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
-    - _Fill: 0.51
+    - _Fill: 0
     - _WobbleX: 0
     - _WobbleZ: 0
     m_Colors:
-    - _SideColor: {r: 0.6627451, g: 0.07450981, b: 0.15294118, a: 0}
-    - _TopColor: {r: 0.6886792, g: 0.15917587, b: 0.22977625, a: 0}
+    - _SideColor: {r: 1, g: 0.3333333, b: 0, a: 0}
+    - _TopColor: {r: 1, g: 0.4117647, b: 0.1254902, a: 0}
   m_BuildTextureStacks: []

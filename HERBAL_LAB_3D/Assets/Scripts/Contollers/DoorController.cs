@@ -22,8 +22,8 @@ public class DoorController : MonoBehaviour
     {
         isAnimating = true;
 
-        Quaternion leftTargetRotation = leftHinge ? Quaternion.Euler(0, isOpen ? 0 : 90, 0) : Quaternion.identity;
-        Quaternion rightTargetRotation = rightHinge ? Quaternion.Euler(0, isOpen ? 0 : -90, 0) : Quaternion.identity;
+        Quaternion leftTargetRotation = leftHinge ? Quaternion.Euler(leftHinge.transform.rotation.eulerAngles.x, isOpen ? 0 : 90, leftHinge.transform.rotation.eulerAngles.z) : Quaternion.identity;
+        Quaternion rightTargetRotation = rightHinge ? Quaternion.Euler(rightHinge.transform.rotation.eulerAngles.x, isOpen ? 0 : -90, rightHinge.transform.rotation.eulerAngles.z) : Quaternion.identity;
 
         while ((leftHinge && leftHinge.localRotation != leftTargetRotation) || (rightHinge && rightHinge.localRotation != rightTargetRotation))
         {
