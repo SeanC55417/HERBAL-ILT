@@ -16,6 +16,7 @@ TagManager:
   - textBox
   - SampleBottle
   - Flask
+  - toHand
   layers:
   - Default
   - TransparentFX
