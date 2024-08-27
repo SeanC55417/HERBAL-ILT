@@ -1,7 +1,7 @@
 using UnityEngine;
 using LiquidVolumeFX;
 
-public class BottleCapInteraction : MonoBehaviour
+public class PipetteToBottle : MonoBehaviour
 {
     public GameObject bottleCap; // Reference to the bottle cap GameObject
     public PickupObject pickupObject; // Reference to the PickupObject script

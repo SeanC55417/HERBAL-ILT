@@ -56,7 +56,7 @@ public class MttAssaySceneScript : MonoBehaviour
 
     // Tracked Objects
     private GameObject CellCultureFlask;
-    private BottleCapInteraction CCFScipt;
+    private PipetteToBottle CCFScipt;
     private CellCultureFlaskShook CCFShakeScript;
     private VolumeChange CCFChange;
     private GameObject ConicalTube;
@@ -69,7 +69,7 @@ public class MttAssaySceneScript : MonoBehaviour
 
         // Tracked Objects
         CellCultureFlask = GameObject.Find("CellCultureFlask");
-        CCFScipt = CellCultureFlask.GetComponent<BottleCapInteraction>();
+        CCFScipt = CellCultureFlask.GetComponent<PipetteToBottle>();
         CCFShakeScript = CellCultureFlask.GetComponent<CellCultureFlaskShook>();
         CCFChange = CellCultureFlask.GetComponent<VolumeChange>();
 
@@ -115,7 +115,7 @@ public class MttAssaySceneScript : MonoBehaviour
         // Initialize the first game step
         currentStep = GameStep.TrypsinAndMediumInHeater;
 
-        // hud_text.text = "Welcome to the MTT Assay Lab!\nRetrieve “Trypsin EDTA” from the -20\u00B0C freezer and “complete medium”\nfrom the 4\u00B0C fridge and place in the incubator to start.";
+        hud_text.text = "Welcome to the MTT Assay Lab!\nRetrieve “Trypsin EDTA” from the -20\u00B0C freezer and “complete medium”\nfrom the 4\u00B0C fridge and place in the incubator to start.";
     }
 
     void Update()
@@ -143,7 +143,7 @@ public class MttAssaySceneScript : MonoBehaviour
             case GameStep.RemoveSpentMedia:
                 if (CCFChange.IsClean()){    
                     CCFScipt.fillBottle = 0.2f;
-                    CCFScipt.type = BottleCapInteraction.Exchange.Fill;        
+                    CCFScipt.type = PipetteToBottle.Exchange.Fill;        
                     CompleteStep(GameStep.AddTrypsin, "Using the stripette, add the Trypsin EDTA to the cell culture flask");
                 }
             break;
@@ -168,7 +168,7 @@ public class MttAssaySceneScript : MonoBehaviour
                     CompleteStep(GameStep.TransferToConicalTube, "Using the stripette, transfer the cell suspension to a “conical tube”");
                     CCFScipt.fillBottle = 0.3f;
                     CCFScipt.fillPipette = 1f;
-                    CCFScipt.type = BottleCapInteraction.Exchange.TransferFrom;
+                    CCFScipt.type = PipetteToBottle.Exchange.TransferFrom;
                 }
             break;
             case GameStep.TransferToConicalTube:

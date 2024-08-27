@@ -14,6 +14,8 @@ public class PickupObject : MonoBehaviour
     private bool isEquipped = false;
     public float scrollSensitivity = 0.5f;
 
+    private int originalLayer; // Store the original layer of the held object
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -79,6 +81,9 @@ public class PickupObject : MonoBehaviour
             objectRb.transform.parent = playerCamera;
             objectRb.transform.localPosition = new Vector3(0f, 0f, currentHoldDistance);
             heldObject = pickObject;
+
+            // Store the original layer of the held object
+            originalLayer = heldObject.layer;
         }
     }
 
@@ -90,7 +95,16 @@ public class PickupObject : MonoBehaviour
             heldRb.useGravity = true;
             heldRb.drag = 1;
 
-            Transform objectTransform = heldObject.transform;
+            // Re-enable the collider
+            Collider heldCollider = heldObject.GetComponent<Collider>();
+            if (heldCollider != null)
+            {
+                heldCollider.enabled = true;
+            }
+
+            // Reset the object's layer and its children's layers to the original
+            SetLayerRecursively(heldObject, originalLayer);
+
             heldObject.transform.parent = null;
 
             // Raycast to check if there's an object within range where the object can be dropped
@@ -127,9 +141,18 @@ public class PickupObject : MonoBehaviour
 
             // Set the object's position and rotation relative to the hand position
             heldObject.transform.parent = handPosition;
-            heldObject.transform.localPosition = preferredPosition;
-            heldObject.transform.localRotation = preferredRotation;
+            heldObject.transform.SetLocalPositionAndRotation(preferredPosition, preferredRotation);
             isEquipped = true;
+
+            // Disable the collider
+            Collider heldCollider = heldObject.GetComponent<Collider>();
+            if (heldCollider != null)
+            {
+                heldCollider.enabled = false;
+            }
+
+            // Change the object's layer and its children's layers to "Menu"
+            SetLayerRecursively(heldObject, LayerMask.NameToLayer("Menu"));
         }
     }
 
@@ -138,39 +161,35 @@ public class PickupObject : MonoBehaviour
         return heldObject;
     }
 
-void RotationReset(GameObject pickObject)
-{
-    Rigidbody objectRb = pickObject.GetComponent<Rigidbody>();
-    if (objectRb != null)
+    void RotationReset(GameObject pickObject)
     {
-        objectRb.angularVelocity = Vector3.zero;
-
-        if (isEquipped)
+        Rigidbody objectRb = pickObject.GetComponent<Rigidbody>();
+        if (objectRb != null)
         {
-            // Reset rotation and position relative to the hand when equipped
-            PickableObjectProperties properties = pickObject.GetComponent<PickableObjectProperties>();
+            objectRb.angularVelocity = Vector3.zero;
 
-            // If the object has custom properties, use them; otherwise, reset to defaults
-            if (properties != null)
+            if (isEquipped)
             {
-                pickObject.transform.localPosition = properties.preferredHeldPosition;
-                pickObject.transform.localRotation = properties.preferredHeldRotation;
+                // Reset rotation and position relative to the hand when equipped
+                PickableObjectProperties properties = pickObject.GetComponent<PickableObjectProperties>();
+
+                // If the object has custom properties, use them; otherwise, reset to defaults
+                if (properties != null)
+                {
+                    pickObject.transform.SetLocalPositionAndRotation(properties.preferredHeldPosition, properties.preferredHeldRotation);
+                }
+                else
+                {
+                    pickObject.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                }
             }
             else
             {
-                pickObject.transform.localPosition = Vector3.zero;
-                pickObject.transform.localRotation = Quaternion.identity;
+                // Reset rotation and position in front of the camera when not equipped
+                objectRb.transform.SetLocalPositionAndRotation(new Vector3(0f, 0f, currentHoldDistance), Quaternion.Euler(0f, 90f, 0f));
             }
         }
-        else
-        {
-            // Reset rotation and position in front of the camera when not equipped
-            objectRb.transform.localPosition = new Vector3(0f, 0f, currentHoldDistance);
-            objectRb.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
-        }
     }
-}
-
 
     void AdjustHoldDistance(float scrollInput)
     {
@@ -187,5 +206,23 @@ void RotationReset(GameObject pickObject)
     {
         heldObject = null;
         isEquipped = false;
+    }
+
+    public GameObject GetHeldObject()
+    {
+        return heldObject;
+    }
+
+    // Helper method to set the layer of an object and its children recursively
+    private void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        if (obj == null) return;
+
+        obj.layer = newLayer;
+
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
     }
 }
