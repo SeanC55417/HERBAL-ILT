@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+using UnityEngine.UI; // Add this to use UI components
 
 public class Vortex : MonoBehaviour
 {
     public GameObject tube; // Reference to the tube GameObject
+    public GameObject tube2;
     public float requiredContactTime = 3f; // The total time the tube needs to be in contact with the vortex
 
     private float contactTime = 0f; // To track the cumulative contact time
     private bool isTubeInContact = false; // To track if the tube is currently in contact
     public bool vortexed = false;
+    public UnityEngine.UI.Image progress; // Reference to the UI Image component for the progress circle
 
     void Update()
     {
@@ -17,6 +21,9 @@ public class Vortex : MonoBehaviour
         if (isTubeInContact)
         {
             contactTime += Time.deltaTime;
+
+            // Update the progress circle fill amount based on contact time
+            progress.fillAmount = contactTime / requiredContactTime;
 
             // Check if the required contact time has been reached
             if (contactTime >= requiredContactTime)
@@ -26,14 +33,22 @@ public class Vortex : MonoBehaviour
                 contactTime = 0f;
                 isTubeInContact = false; // Stop further counting until the tube exits and re-enters
                 vortexed = true;
+
+                // Reset the progress fill amount to 0
+                progress.fillAmount = 0f;
             }
+        }
+        else
+        {
+            // If the tube is not in contact, reset the progress fill
+            progress.fillAmount = 0f;
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
         // Check if the tube has entered the collider
-        if (other.gameObject == tube)
+        if (other.gameObject == tube || other.gameObject == tube2)
         {
             isTubeInContact = true;
             Debug.Log("Tube entered the vortex.");
@@ -43,10 +58,13 @@ public class Vortex : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         // Check if the tube has exited the collider
-        if (other.gameObject == tube)
+        if (other.gameObject == tube || other.gameObject == tube2)
         {
             isTubeInContact = false;
             Debug.Log("Tube exited the vortex.");
+            
+            // Reset the progress fill amount when the tube exits
+            progress.fillAmount = 0f;
         }
     }
 
@@ -57,5 +75,3 @@ public class Vortex : MonoBehaviour
         // Add your custom logic here for what happens when the tube has been in contact long enough
     }
 }
-
-
