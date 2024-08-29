@@ -10,11 +10,12 @@ public class PickupObject : MonoBehaviour
     public float pickupRange = 5f;
     public float defaultHoldDistance = 1f;
     private float currentHoldDistance;
-    private GameObject heldObject;
+    public GameObject heldObject;
     private bool isEquipped = false;
     public float scrollSensitivity = 0.5f;
 
     private int originalLayer; // Store the original layer of the held object
+    private readonly List<Collider> objectColliders = new(); // List to store all colliders
 
     void Update()
     {
@@ -95,11 +96,10 @@ public class PickupObject : MonoBehaviour
             heldRb.useGravity = true;
             heldRb.drag = 1;
 
-            // Re-enable the collider
-            Collider heldCollider = heldObject.GetComponent<Collider>();
-            if (heldCollider != null)
+            // Re-enable all colliders
+            foreach (Collider col in objectColliders)
             {
-                heldCollider.enabled = true;
+                col.enabled = true;
             }
 
             // Reset the object's layer and its children's layers to the original
@@ -123,6 +123,7 @@ public class PickupObject : MonoBehaviour
 
             heldObject = null;
             isEquipped = false;
+            objectColliders.Clear(); // Clear the collider list after dropping the object
         }
     }
 
@@ -144,11 +145,12 @@ public class PickupObject : MonoBehaviour
             heldObject.transform.SetLocalPositionAndRotation(preferredPosition, preferredRotation);
             isEquipped = true;
 
-            // Disable the collider
-            Collider heldCollider = heldObject.GetComponent<Collider>();
-            if (heldCollider != null)
+            // Store and disable all colliders
+            objectColliders.Clear();
+            objectColliders.AddRange(heldObject.GetComponentsInChildren<Collider>());
+            foreach (Collider col in objectColliders)
             {
-                heldCollider.enabled = false;
+                col.enabled = false;
             }
 
             // Change the object's layer and its children's layers to "Menu"
@@ -202,7 +204,7 @@ public class PickupObject : MonoBehaviour
         }
     }
 
-    public void take()
+    public void Take()
     {
         heldObject = null;
         isEquipped = false;

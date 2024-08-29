@@ -5,7 +5,7 @@ using UnityEngine;
 public class SnapFromHand : MonoBehaviour
 {
     public Transform lockPosition;
-    public string tag;
+    public new string tag;
 
     public float snapSpeed = 5f;
     private GameObject inputObject;

@@ -23,6 +23,7 @@ public class MttAssaySceneScript : MonoBehaviour
 
         RemoveMediaFromPellet,
         VortexCells,
+        PipetteToHemocytometer,
         AliquotCellSuspension,
         ViewCellsUnderMicroscope,
         CountLiveAndDeadCells,
@@ -61,8 +62,9 @@ public class MttAssaySceneScript : MonoBehaviour
     private VolumeChange CCFChange;
     private GameObject ConicalTube;
     private VolumeChange CTChange;
-    private GameObject Vortex;
-    private Vortex vortex;
+    private Centrifuge centrifuge;
+    private  Vortex vortex;
+    private Hemocytometer hemocytometer;
 
     void Start()
     {
@@ -76,8 +78,11 @@ public class MttAssaySceneScript : MonoBehaviour
         ConicalTube = GameObject.Find("ConicalTube");
         CTChange = ConicalTube.GetComponent<VolumeChange>();
 
-        Vortex = GameObject.Find("Vortex");         // This code is so evil ;)
-        vortex = Vortex.GetComponent<Vortex>();
+        centrifuge = FindObjectOfType<Centrifuge>();
+
+        vortex = FindObjectOfType<Vortex>();
+
+        hemocytometer = FindObjectOfType<Hemocytometer>();
 
         // Find the instructionObject GameObject and get the InstructionScript component
         GameObject instructionObject = GameObject.Find("Instructions");
@@ -173,14 +178,38 @@ public class MttAssaySceneScript : MonoBehaviour
             break;
             case GameStep.TransferToConicalTube:
                 if (CTChange.IsClean()){
-                    CompleteStep(GameStep.VortexCells, "Vortex the cell suspension and pipette a small amount onto the “hemocytometer”");
+                    CompleteStep(GameStep.CentrifugeCells, "Centrafuge the tube");
+                    centrifuge.CentrifugeActive = true;
+                }
+            break;
+            case GameStep.CentrifugeCells:
+                if (centrifuge.Centrafuged){
+                    CompleteStep(GameStep.RemoveMediaFromPellet, "Remove media from pellet");
+                }
+            
+            break;
+            case GameStep.RemoveMediaFromPellet:
+                if(true){
+                    CompleteStep(GameStep.VortexCells, "Vortex the cell suspension");
+                    vortex.VortexActive = true;
                 }
             break;
             case GameStep.VortexCells:
-                if (vortex.vortexed){
-                    CompleteStep(GameStep.AliquotCellSuspension,"Using the “single-channel pipette”, aliquot a portion of the cell suspension\ninto an “Eppendorf tube containing complete medium and trypan blue”");
+                if (vortex.Vortexed){
+                    CompleteStep(GameStep.PipetteToHemocytometer,"");
+                    vortex.VortexActive = false;
                 }
             break;
+            case GameStep.PipetteToHemocytometer:
+                if (hemocytometer.Filled)
+                {
+                    CompleteStep(GameStep.AliquotCellSuspension, "Using the “single-channel pipette”, aliquot a portion of the cell suspension\ninto an “Eppendorf tube containing complete medium and trypan blue”");
+                }
+            break;
+            case GameStep.AliquotCellSuspension:
+                
+            break;
+
         }   
     }
 

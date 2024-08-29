@@ -11,18 +11,33 @@ public class Centrifuge : MonoBehaviour
     public PickupObject pickupObject;
 
     private bool isAnimating = false; // To track if the animation is playing
-    private float rotationSpeed = 90f; // degrees per second
+    private readonly float rotationSpeed = 90f; // degrees per second
+    private bool centrifugeActive = true; //! here later false
+    private bool centrifuged = false;
+
+    public bool CentrifugeActive
+    {
+        get { return centrifugeActive; }
+        set { centrifugeActive = value; }
+    }
+
+    public bool Centrafuged
+    {
+        get { return centrifuged; }
+        set { centrifuged = value; }
+    }
 
     void OnTriggerEnter(Collider other)
     {
         // Check if the object entering the trigger is the tube
-        if (other.gameObject == tube && !isAnimating)
+        if (centrifugeActive && other.gameObject == tube && !isAnimating)
         {
             // Move the tube to the predefined placement position
             PlaceTube();
 
             // Start the hinge rotation sequence
             StartCoroutine(HingeRotationSequence());
+
         }
     }
 
@@ -30,7 +45,7 @@ public class Centrifuge : MonoBehaviour
     {
         if (tubePlacement != null && tube != null)
         {
-            pickupObject.take();
+            pickupObject.Take();
 
             // Ensure the tube is not parented to any other object to prevent unexpected movement
             tube.transform.SetParent(null);
@@ -74,6 +89,7 @@ public class Centrifuge : MonoBehaviour
         yield return RotateHinge(Vector3.zero);
 
         isAnimating = false;
+        centrifuged = true;
     }
 
     private IEnumerator RotateHinge(Vector3 targetEulerAngles)
