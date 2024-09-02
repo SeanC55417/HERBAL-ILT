@@ -1,6 +1,6 @@
 using UnityEngine;
 using LiquidVolumeFX;
-using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class PipetteToBottle : MonoBehaviour
 {
@@ -16,6 +16,8 @@ public class PipetteToBottle : MonoBehaviour
 
     private Renderer capRenderer;
     private bool isHovered = false;
+    
+    public bool pipetteToBottleActive = true;
 
     void Start()
     {
@@ -28,7 +30,10 @@ public class PipetteToBottle : MonoBehaviour
 
     void Update()
     {
-        HandlePipetteEquipped();
+        if (pipetteToBottleActive)
+        {
+            HandlePipetteEquipped();
+        }
     }
 
     // Handle the pipette being equipped and hovering detection
@@ -91,12 +96,15 @@ public class PipetteToBottle : MonoBehaviour
             LiquidVolume pipetteLiquid = pipette.GetComponentInChildren<LiquidVolume>();
             if (pipetteLiquid != null)
             {
-                if (liquidVolume.liquidLayers.Length > 1 || pipetteLiquid.liquidLayers.Length > 1)
+                Debug.Log(liquidVolume.liquidLayers.Length);
+                if (liquidVolume.detail == DETAIL.Multiple && liquidVolume.liquidLayers.Length > 1)
                 {
-                    MultiLayerLiquidExchange(pipetteLiquid.liquidLayers);
+                    // RemoveTopLayer();
+                    MultiLayerLiquidExchange(pipetteLiquid);
                 }
                 else
                 {
+                    Debug.Log("Single");
                     PerformLiquidExchange(pipetteLiquid);
                 }
             }
@@ -132,62 +140,59 @@ public class PipetteToBottle : MonoBehaviour
         }
     }
 
-// Handle multi-layer liquid exchange
-    private void MultiLayerLiquidExchange(LiquidVolume.LiquidLayer[] liquidLayers)
+    // Handle multi-layer liquid exchange
+    private void MultiLayerLiquidExchange(LiquidVolume pipetteLiquid)
     {
-        // LiquidVolumeLayer[] bottleLayers = pipetteLayers;
-        // switch (type)
-        // {
-        //     case Exchange.Fill:
-        //         // Empty the pipette and fill the bottle with pipette's liquid layers
-        //         for (int i = 0; i < bottleLayers.Length && i < pipetteLayers.Length; i++)
-        //         {
-        //             bottleLayers[i].layer.amount = pipetteLayers[i].amount;
-        //             bottleLayers[i].color = pipetteLayers[i].color;
-        //             pipetteLayers[i].amount = 0f; // Clear pipette layer after transfer
-        //         }
-        //         liquidVolume.UpdateLayers();
-        //         break;
+        int top = liquidVolume.liquidLayers.Length - 1;
 
-        //     case Exchange.TransferTo:
-        //         // Transfer liquid from pipette to bottle
-        //         for (int i = 0; i < bottleLayers.Length && i < pipetteLayers.Length; i++)
-        //         {
-        //             float transferAmount = Mathf.Min(pipetteLayers[i].amount, fillPipette);
-        //             bottleLayers[i].amount += transferAmount;
-        //             pipetteLayers[i].amount -= transferAmount;
+        switch (type)
+        {
+            case Exchange.Fill:
+                liquidVolume.liquidLayers[top].amount = fillBottle;
+                pipetteLiquid.level = 0f;
+                pipetteLiquid.liquidColor1 = liquidVolume.liquidLayers[top].color;
+                pipetteLiquid.liquidColor2 = liquidVolume.liquidLayers[top].color;
+                break;
 
-        //             // Blend colors proportionally
-        //             bottleLayers[i].color = BlendColors(bottleLayers[i].color, pipetteLayers[i].color, transferAmount);
-        //         }
-        //         liquidVolume.UpdateLayers();
-        //         break;
+            case Exchange.TransferTo:
+                TransferLiquid(pipetteLiquid, fillPipette, fillBottle);
+                break;
 
-        //     case Exchange.TransferFrom:
-        //         // Transfer liquid from bottle to pipette
-        //         for (int i = 0; i < bottleLayers.Length && i < pipetteLayers.Length; i++)
-        //         {
-        //             float transferAmount = Mathf.Min(bottleLayers[i].amount, fillBottle);
-        //             pipetteLayers[i].amount += transferAmount;
-        //             bottleLayers[i].amount -= transferAmount;
+            case Exchange.TransferFrom:
+                TransferLiquid(liquidVolume.liquidLayers[top], fillBottle, fillPipette);
+                break;
 
-        //             // Blend colors proportionally
-        //             pipetteLayers[i].color = BlendColors(pipetteLayers[i].color, bottleLayers[i].color, transferAmount);
-        //         }
-        //         liquidVolume.UpdateLayers();
-        //         break;
+            case Exchange.Empty:
+                top = GetTopEmptyLayerIndex();
+                pipetteLiquid.level = fillPipette;
+                pipetteLiquid.liquidColor1 = liquidVolume.liquidLayers[top].color;
+                pipetteLiquid.liquidColor2 = liquidVolume.liquidLayers[top].color;
+                liquidVolume.liquidLayers[top].amount = 0f;
+                break;
+        }
+        liquidVolume.UpdateLayers();
+    }
 
-        //     case Exchange.Empty:
-        //         // Empty the bottle and fill the pipette with bottle's liquid layers
-        //         for (int i = 0; i < pipetteLayers.Length && i < bottleLayers.Length; i++)
-        //         {
-        //             pipetteLayers[i].amount = bottleLayers[i].amount;
-        //             pipetteLayers[i].color = bottleLayers[i].color;
-        //             bottleLayers[i].amount = 0f; // Clear bottle layer after transfer
-        //         }
-        //         liquidVolume.UpdateLayers();
-        //         break;
-        // }
+    void RemoveTopLayer()
+    {
+        for(int i = liquidVolume.liquidLayers.Length - 1; i > -1; i--)
+        {   
+            if (liquidVolume.liquidLayers[i].amount != 0){
+                liquidVolume.liquidLayers[i].amount = 0f;
+                liquidVolume.UpdateLayers();
+                return;
+            }
+        }
+    }
+
+    private int GetTopEmptyLayerIndex()
+    {
+        for (int i = liquidVolume.liquidLayers.Length - 1; i > -1; i--)
+        {   
+            if (liquidVolume.liquidLayers[i].amount != 0)
+                return i;
+        }
+        return 0;
     }
 
 
@@ -202,6 +207,19 @@ public class PipetteToBottle : MonoBehaviour
 
         liquidVolume.liquidColor2 = BlendColors(liquidVolume.liquidColor2, source.liquidColor2, sourceAmount);
         source.liquidColor2 = BlendColors(source.liquidColor2, liquidVolume.liquidColor2, targetAmount);
+    }
+
+        // Transfer liquid between two LiquidVolume components
+    private void TransferLiquid(LiquidVolume.LiquidLayer source, float sourceAmount, float targetAmount)
+    {
+        liquidVolume.level += targetAmount;
+        source.amount -= sourceAmount;
+
+        liquidVolume.liquidColor1 = BlendColors(liquidVolume.liquidColor1, source.color, sourceAmount);
+        source.color = BlendColors(source.color, liquidVolume.liquidColor1, targetAmount);
+
+        liquidVolume.liquidColor2 = BlendColors(liquidVolume.liquidColor2, source.color, sourceAmount);
+        source.color = BlendColors(source.color, liquidVolume.liquidColor2, targetAmount);
     }
 
     // Toggle the visibility of the bottle cap

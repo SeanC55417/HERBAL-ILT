@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using LiquidVolumeFX;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MttAssaySceneScript : MonoBehaviour
 {
@@ -23,8 +25,9 @@ public class MttAssaySceneScript : MonoBehaviour
 
         RemoveMediaFromPellet,
         VortexCells,
-        PipetteToHemocytometer,
         AliquotCellSuspension,
+        VortexCellsAgain,
+        PipetteToHemocytometer,
         ViewCellsUnderMicroscope,
         CountLiveAndDeadCells,
 
@@ -57,32 +60,58 @@ public class MttAssaySceneScript : MonoBehaviour
 
     // Tracked Objects
     private GameObject CellCultureFlask;
-    private PipetteToBottle CCFScipt;
+    private LiquidTransfering CCFLiquidTransfer;
     private CellCultureFlaskShook CCFShakeScript;
     private VolumeChange CCFChange;
-    private GameObject ConicalTube;
+    private GameObject SingleConicalTube;
+    private GameObject MultiConicalTube;
     private VolumeChange CTChange;
     private Centrifuge centrifuge;
+    private LiquidTransfering CTLiquid;
+    private LiquidTransfering CTMultiLiquid;
+    private LiquidVolume LCTLayers;
     private  Vortex vortex;
+    private GameObject medium;
+    private LiquidTransfering mediumLiquid;
     private Hemocytometer hemocytometer;
+    private GameObject singleChannelPipette;
+    private GameObject Eppendorf;
+    private LiquidVolume EppendophLV;
 
     void Start()
     {
-
         // Tracked Objects
         CellCultureFlask = GameObject.Find("CellCultureFlask");
-        CCFScipt = CellCultureFlask.GetComponent<PipetteToBottle>();
+        CCFLiquidTransfer = CellCultureFlask.GetComponent<LiquidTransfering>();
+
         CCFShakeScript = CellCultureFlask.GetComponent<CellCultureFlaskShook>();
         CCFChange = CellCultureFlask.GetComponent<VolumeChange>();
 
-        ConicalTube = GameObject.Find("ConicalTube");
-        CTChange = ConicalTube.GetComponent<VolumeChange>();
+        SingleConicalTube = GameObject.Find("CylinderSingle");
+        CTLiquid = SingleConicalTube.GetComponent<LiquidTransfering>();
+        CTChange = SingleConicalTube.GetComponent<VolumeChange>();
+
+        MultiConicalTube = GameObject.Find("CylinderLayered");
+        LCTLayers = MultiConicalTube.GetComponent<LiquidVolume>();
+        CTMultiLiquid = MultiConicalTube.GetComponent<LiquidTransfering>();
+        MultiConicalTube.SetActive(false);
 
         centrifuge = FindObjectOfType<Centrifuge>();
 
+
+
         vortex = FindObjectOfType<Vortex>();
 
+        medium = GameObject.Find("Medium");
+        mediumLiquid = medium.GetComponentInChildren<LiquidTransfering>();
+
+        singleChannelPipette = GameObject.Find("Single-Channel-Pippette");
+        Debug.Log(singleChannelPipette);
+
         hemocytometer = FindObjectOfType<Hemocytometer>();
+
+        Eppendorf = GameObject.Find("Eppendorf");
+        EppendophLV = GetComponentInChildren<LiquidVolume>();
 
         // Find the instructionObject GameObject and get the InstructionScript component
         GameObject instructionObject = GameObject.Find("Instructions");
@@ -147,8 +176,8 @@ public class MttAssaySceneScript : MonoBehaviour
                 break;
             case GameStep.RemoveSpentMedia:
                 if (CCFChange.IsClean()){    
-                    CCFScipt.fillBottle = 0.2f;
-                    CCFScipt.type = PipetteToBottle.Exchange.Fill;        
+                    CCFLiquidTransfer.amountContainer = 0.2f;
+                    CCFLiquidTransfer.amountPipette = 0f;
                     CompleteStep(GameStep.AddTrypsin, "Using the stripette, add the Trypsin EDTA to the cell culture flask");
                 }
             break;
@@ -158,7 +187,8 @@ public class MttAssaySceneScript : MonoBehaviour
             // break;
             case GameStep.AddTrypsin:
                 if (CCFChange.HasTrypsin()){        
-                    CCFScipt.fillBottle = 0.4f;
+                    CCFLiquidTransfer.amountContainer = 0.4f;
+                    // CCFLiquidTransfer.amountPipette = 0f;
                     CompleteStep(GameStep.AddMedium, "Using the stripette, add complete medium to the flask");
                 }
             break;
@@ -171,9 +201,8 @@ public class MttAssaySceneScript : MonoBehaviour
                 CCFShakeScript.isShakeDetectionActive = true;
                 if(CCFShakeScript.IsShaken()){
                     CompleteStep(GameStep.TransferToConicalTube, "Using the stripette, transfer the cell suspension to a “conical tube”");
-                    CCFScipt.fillBottle = 0.3f;
-                    CCFScipt.fillPipette = 1f;
-                    CCFScipt.type = PipetteToBottle.Exchange.TransferFrom;
+                    CCFLiquidTransfer.amountContainer = 0.3f;
+                    CCFLiquidTransfer.amountPipette = 1f;
                 }
             break;
             case GameStep.TransferToConicalTube:
@@ -184,31 +213,47 @@ public class MttAssaySceneScript : MonoBehaviour
             break;
             case GameStep.CentrifugeCells:
                 if (centrifuge.Centrafuged){
-                    CompleteStep(GameStep.RemoveMediaFromPellet, "Remove media from pellet");
+                    CompleteStep(GameStep.RemoveMediaFromPellet, "Remove media from tube an put back into medium bottle");
+                    mediumLiquid.amountContainer = 0.9f;
+                    mediumLiquid.amountPipette = 0f;
                 }
-            
             break;
             case GameStep.RemoveMediaFromPellet:
-                if(true){
+                if(LCTLayers.liquidLayers.Last().amount == 0f && mediumLiquid.GetContainerLevel() == 0.9f){
                     CompleteStep(GameStep.VortexCells, "Vortex the cell suspension");
                     vortex.VortexActive = true;
                 }
             break;
             case GameStep.VortexCells:
                 if (vortex.Vortexed){
-                    CompleteStep(GameStep.PipetteToHemocytometer,"");
+                    CompleteStep(GameStep.PipetteToHemocytometer, "Using the “single-channel pipette”, aliquot a portion of the cell suspension\ninto an “Eppendorf tube containing complete medium and trypan blue”");
                     vortex.VortexActive = false;
+
+                    CTMultiLiquid.SetPipette(singleChannelPipette);
+                    CTMultiLiquid.amountContainer = 0.2f;
+                    CTMultiLiquid.amountPipette = 0.8f;
                 }
+            break;
+            case GameStep.AliquotCellSuspension:
+                if (EppendophLV.level == .9f)
+                {
+                    
+                }
+                
+            break;
+            case GameStep.VortexCellsAgain:
             break;
             case GameStep.PipetteToHemocytometer:
                 if (hemocytometer.Filled)
                 {
-                    CompleteStep(GameStep.AliquotCellSuspension, "Using the “single-channel pipette”, aliquot a portion of the cell suspension\ninto an “Eppendorf tube containing complete medium and trypan blue”");
+                    CompleteStep(GameStep.AliquotCellSuspension, "");
                 }
             break;
-            case GameStep.AliquotCellSuspension:
-                
-            break;
+
+        // Vortex the cell suspension and pipette a small amount onto the “hemocytometer”
+        // Bring the hemocytometer to the “microscope” and view the cells through the eye lens
+        // Count the number of live and dead cells in each corner and record in your notebook
+
 
         }   
     }
