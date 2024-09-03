@@ -7,7 +7,6 @@ public class Vortex : MonoBehaviour
 {
     [Header("Tube References")]
     public GameObject tube;  // Reference to the first tube GameObject
-    public GameObject tube2; // Reference to the second tube GameObject
 
     [Header("Vortex Settings")]
     public float requiredContactTime = 3f; // The total time the tube needs to be in contact with the vortex
@@ -52,10 +51,6 @@ public class Vortex : MonoBehaviour
             if (contactTime >= requiredContactTime)
             {
                 OnContactTimeReached();
-                contactTime = 0f;
-                isTubeInContact = false;
-                vortexed = true;
-                progress.fillAmount = 0f;
             }
         }
         else
@@ -66,7 +61,7 @@ public class Vortex : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == tube || other.gameObject == tube2)
+        if (other.gameObject == tube)
         {
             isTubeInContact = true;
         }
@@ -74,7 +69,7 @@ public class Vortex : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject == tube || other.gameObject == tube2)
+        if (other.gameObject == tube)
         {
             isTubeInContact = false;
             progress.fillAmount = 0f;
@@ -83,6 +78,9 @@ public class Vortex : MonoBehaviour
 
     private void OnContactTimeReached()
     {
-        // Custom logic for when the tube has been in contact with the vortex for the required time
+        contactTime = 0f;
+        isTubeInContact = false;
+        vortexed = true;
+        progress.fillAmount = 0f;
     }
 }

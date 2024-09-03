@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LiquidVolumeFX;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -28,6 +29,7 @@ public class MttAssaySceneScript : MonoBehaviour
         AliquotCellSuspension,
         VortexCellsAgain,
         PipetteToHemocytometer,
+        PlaceHemocytomerUnderMicroscope,
         ViewCellsUnderMicroscope,
         CountLiveAndDeadCells,
 
@@ -71,12 +73,13 @@ public class MttAssaySceneScript : MonoBehaviour
     private LiquidTransfering CTMultiLiquid;
     private LiquidVolume LCTLayers;
     private  Vortex vortex;
-    private GameObject medium;
     private LiquidTransfering mediumLiquid;
     private Hemocytometer hemocytometer;
     private GameObject singleChannelPipette;
     private GameObject Eppendorf;
     private LiquidVolume EppendophLV;
+    private LiquidTransfering EppendorphLT;
+    private Microscope microscope;
 
     void Start()
     {
@@ -98,20 +101,20 @@ public class MttAssaySceneScript : MonoBehaviour
 
         centrifuge = FindObjectOfType<Centrifuge>();
 
-
-
         vortex = FindObjectOfType<Vortex>();
 
-        medium = GameObject.Find("Medium");
-        mediumLiquid = medium.GetComponentInChildren<LiquidTransfering>();
+        mediumLiquid = GameObject.Find("Medium").GetComponentInChildren<LiquidTransfering>();
 
         singleChannelPipette = GameObject.Find("Single-Channel-Pippette");
-        Debug.Log(singleChannelPipette);
 
         hemocytometer = FindObjectOfType<Hemocytometer>();
 
         Eppendorf = GameObject.Find("Eppendorf");
-        EppendophLV = GetComponentInChildren<LiquidVolume>();
+        EppendophLV = Eppendorf.GetComponentInChildren<LiquidVolume>();
+        EppendorphLT = Eppendorf.GetComponentInChildren<LiquidTransfering>();
+
+        microscope = GameObject.Find("Microscope").GetComponent<Microscope>();
+        Debug.Log(microscope);
 
         // Find the instructionObject GameObject and get the InstructionScript component
         GameObject instructionObject = GameObject.Find("Instructions");
@@ -181,10 +184,6 @@ public class MttAssaySceneScript : MonoBehaviour
                     CompleteStep(GameStep.AddTrypsin, "Using the stripette, add the Trypsin EDTA to the cell culture flask");
                 }
             break;
-            // case GameStep.isTrue:
-
-            //     CompleteStep(GameStep.AddTrypsin, "Using the stripette, add the Trypsin EDTA to the cell culture flask");
-            // break;
             case GameStep.AddTrypsin:
                 if (CCFChange.HasTrypsin()){        
                     CCFLiquidTransfer.amountContainer = 0.4f;
@@ -226,27 +225,48 @@ public class MttAssaySceneScript : MonoBehaviour
             break;
             case GameStep.VortexCells:
                 if (vortex.Vortexed){
-                    CompleteStep(GameStep.PipetteToHemocytometer, "Using the “single-channel pipette”, aliquot a portion of the cell suspension\ninto an “Eppendorf tube containing complete medium and trypan blue”");
+                    CompleteStep(GameStep.AliquotCellSuspension, "Using the “single-channel pipette”, aliquot a portion of the cell suspension\ninto an “Eppendorf tube containing complete medium and trypan blue”");
                     vortex.VortexActive = false;
+                    vortex.Vortexed = false;
 
                     CTMultiLiquid.SetPipette(singleChannelPipette);
-                    CTMultiLiquid.amountContainer = 0.2f;
+                    CTMultiLiquid.amountContainer = 0.0f;
                     CTMultiLiquid.amountPipette = 0.8f;
                 }
             break;
             case GameStep.AliquotCellSuspension:
                 if (EppendophLV.level == .9f)
                 {
-                    
+                    CompleteStep(GameStep.VortexCellsAgain, "Vortex eppendorf tube");
+                    vortex.tube = Eppendorf;
+                    vortex.VortexActive = true;
                 }
-                
             break;
             case GameStep.VortexCellsAgain:
+                if(vortex.Vortexed){
+                    CompleteStep(GameStep.PipetteToHemocytometer, "Using the “single-channel pipette”, pipette a small amount onto the “hemocytometer");
+                    hemocytometer.HemocytometerActive = true;
+                    EppendorphLT.amountContainer = 0.7f;
+                    EppendorphLT.amountPipette = 0.7f;
+                }
             break;
             case GameStep.PipetteToHemocytometer:
                 if (hemocytometer.Filled)
                 {
-                    CompleteStep(GameStep.AliquotCellSuspension, "");
+                    CompleteStep(GameStep.PlaceHemocytomerUnderMicroscope, "Load hemocytometer into microscope");
+                    microscope.microscopeActive = true;
+                    hemocytometer.targetPipette.GetComponentInChildren<LiquidVolume>().level = 0f;
+                }
+            break;
+            case GameStep.PlaceHemocytomerUnderMicroscope:
+                if (microscope.IsSampleLoaded()){
+                    CompleteStep(GameStep.ViewCellsUnderMicroscope, "Click microscope to view cells");
+                }
+            break;
+            case GameStep.ViewCellsUnderMicroscope:
+                if (microscope.IsViewing())
+                {
+                    
                 }
             break;
 

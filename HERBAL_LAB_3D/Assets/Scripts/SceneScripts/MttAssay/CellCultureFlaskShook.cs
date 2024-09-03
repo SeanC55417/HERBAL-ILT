@@ -40,7 +40,7 @@ public class CellCultureFlaskShook : MonoBehaviour
             if (accumulatedDistance >= shakeThreshold)
             {
                 isShaken = true;
-                Debug.Log("The object has been shaken!");
+                // Debug.Log("The object has been shaken!");
                 // Stop the shake detection after the object is shaken
                 isShakeDetectionActive = false;
             }

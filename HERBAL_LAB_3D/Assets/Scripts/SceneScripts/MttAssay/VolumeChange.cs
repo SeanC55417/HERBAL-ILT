@@ -24,7 +24,6 @@ public class VolumeChange : MonoBehaviour
     {
         if (liquidAmount != liquidVolume.level)
         {
-            Debug.Log(change);
             liquidAmount = liquidVolume.level;
                 switch (change){
                 case 0:
@@ -37,7 +36,6 @@ public class VolumeChange : MonoBehaviour
                     hasMedium = true;
                 break;
                 default:
-                    Debug.Log("Change > 2");
                 break;
             }
             change++;

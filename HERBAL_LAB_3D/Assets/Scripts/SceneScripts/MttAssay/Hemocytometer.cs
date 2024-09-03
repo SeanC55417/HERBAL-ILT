@@ -24,24 +24,11 @@ public class Hemocytometer : MonoBehaviour
         get { return hemocytometerActive; }
         set { hemocytometerActive = value; }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (hemocytometerActive)
-        {
-            
-        }
-    }
 
     public void CheckPipette()
     {
-        if (pickupObject.GetHeldObject() == targetPipette)
+        if (pickupObject.GetHeldObject() == targetPipette && hemocytometerActive)
         {
             
             if (targetPipette.TryGetComponent<LiquidVolume>(out var liquidVolume))
@@ -49,6 +36,7 @@ public class Hemocytometer : MonoBehaviour
                 liquidVolume.level = 0.0f;
             }
             fillArea.SetActive(true);
+            filled = true;
         }
     }
 }

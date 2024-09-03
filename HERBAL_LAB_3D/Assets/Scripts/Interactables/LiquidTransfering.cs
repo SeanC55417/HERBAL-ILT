@@ -72,6 +72,7 @@ public class LiquidTransfering : MonoBehaviour
         pipetteColor = (liquidVolume.liquidLayers[idx].color, liquidVolume.liquidLayers[idx].color);
         float scaleRatio = 1 / liquidVolume.liquidScale1 + liquidVolume.liquidScale2;
         liquidVolume.liquidLayers[idx].color = BlendColors(liquidVolume.liquidLayers[idx].color, BlendColors(liquidVolume.liquidColor1, liquidVolume.liquidColor2, scaleRatio), amountPipette);
+        liquidVolume.speed = 1; // testomg fp s[eed]
         liquidVolume.UpdateLayers();
     }
 

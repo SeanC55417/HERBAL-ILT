@@ -134,6 +134,7 @@ public class PickupObject : MonoBehaviour
             Rigidbody heldRb = heldObject.GetComponent<Rigidbody>();
             heldRb.useGravity = false;
             heldRb.drag = 10;
+            heldRb.angularVelocity = Vector3.zero;
 
             // Get the object's preferred position and rotation
             PickableObjectProperties properties = heldObject.GetComponent<PickableObjectProperties>();
