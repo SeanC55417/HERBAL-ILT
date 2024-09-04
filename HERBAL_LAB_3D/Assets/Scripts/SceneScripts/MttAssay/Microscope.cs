@@ -12,14 +12,16 @@ public class Microscope : MonoBehaviour
     
     public GameObject sampleGameObject;
     public Transform loadingTarget;
+    public GameObject microscopeView;
     public bool microscopeActive = true;
     private PickupObject pickupObject;
-    private bool viewing;
+    private bool viewing = false;
     private bool isSampleLoaded;
 
     void Start()
     {
         pickupObject = FindObjectOfType<PickupObject>();
+        microscopeView.SetActive(viewing);
     }
     void Update()
     {
@@ -41,21 +43,15 @@ public class Microscope : MonoBehaviour
             sampleGameObject.transform.SetParent(null);
             sampleGameObject.transform.SetLocalPositionAndRotation(loadingTarget.position, loadingTarget.rotation);
             isSampleLoaded = true;
-            Debug.Log("ENTERED");
         }
     }
 
-    private void ViewToggle()
+    public void ViewToggle()
     {
-
-    }
-
-    public void OnClicked()
-    {
-        Debug.Log("CLICKED INTO MICROSCOPE");
-        viewing = true;
-        // insert magic here
-        ViewToggle();
+        if (microscopeActive){
+            viewing = !viewing;
+            microscopeView.SetActive(viewing);
+        }
     }
 
     public bool IsSampleLoaded()
