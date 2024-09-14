@@ -16,12 +16,12 @@ public class MouseLookController : MonoBehaviour
     private float rotationX = 0f;
     private float customDeltaTime;
 
-    float timeRequiredForLabel = 2.0f;
-    float hitTime = 0.0f;
-    bool isHitting = false;
+    // float timeRequiredForLabel = 2.0f;
+    // float hitTime = 0.0f;
+    // bool isHitting = false;
 
     public GameObject labelObject;
-    private Dictionary<string, int> itemIndexes = new Dictionary<string, int>();
+    // private Dictionary<string, int> itemIndexes = new Dictionary<string, int>();
     private bool showingLabel = false;
     GameObject currentLabel = null;
     public PickupObject pickupObjectScript;
@@ -54,9 +54,10 @@ public class MouseLookController : MonoBehaviour
     void PerformRaycast()
     {
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        RaycastHit hit;
-        
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
+
+        int layerMask = LayerMask.GetMask("Default", "UI");  // maybe change to !IgnoreRaycast layer
+
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
         {
             HandleInteraction(hit);
         }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class StudentLogin : MonoBehaviour
 {
-    public Text name;
+    public Text studentName;
     public GameObject studentInfoCard;
     public InputField nameInput;
     public InputField studentIDInput;
@@ -24,11 +24,11 @@ public class StudentLogin : MonoBehaviour
     {
         if (nameInput.text != "")
         {
-            name.text = nameInput.text;
+            studentName.text = nameInput.text;
         }
         else
         {
-            name.text = "Guest";
+            studentName.text = "Guest";
         }
     }
 }

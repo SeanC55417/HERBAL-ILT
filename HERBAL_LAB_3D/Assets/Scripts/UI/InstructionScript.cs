@@ -25,7 +25,7 @@ public class InstructionScript : MonoBehaviour
 	private Dictionary<string, int> QuestionHeaderIndexes = new Dictionary<string, int>();
 	float currentQuestionHeight;
 	bool currentlyAnsweringQuestion = false;
-	string studentID = "student1";
+	// string studentID = "student1";
 	private List<string> hintsAlreadyGiven = new List<string>();
 	private int questionsAnswered = 0;
 	// public Sprite uncheckedCheckBox;

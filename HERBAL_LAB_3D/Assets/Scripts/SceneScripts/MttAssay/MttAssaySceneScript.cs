@@ -114,7 +114,7 @@ public class MttAssaySceneScript : MonoBehaviour
         EppendorphLT = Eppendorf.GetComponentInChildren<LiquidTransfering>();
 
         microscope = GameObject.Find("Microscope").GetComponent<Microscope>();
-        Debug.Log(microscope);
+        // Debug.Log(microscope);
 
         // Find the instructionObject GameObject and get the InstructionScript component
         GameObject instructionObject = GameObject.Find("Instructions");

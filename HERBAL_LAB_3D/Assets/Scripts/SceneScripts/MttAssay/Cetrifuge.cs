@@ -11,7 +11,7 @@ public class Centrifuge : MonoBehaviour
     public PickupObject pickupObject;
 
     private bool isAnimating = false; // To track if the animation is playing
-    private readonly float rotationSpeed = 90f; // degrees per second
+    // private readonly float rotationSpeed = 90f; // degrees per second
     private bool centrifugeActive = true; //! here later false
     private bool centrifuged = false;
 
