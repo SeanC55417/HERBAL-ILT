@@ -124,35 +124,36 @@ public class MttAssaySceneScript : MonoBehaviour
             instruction = instructionObject.GetComponent<InstructionScript>();
         }
 
-        if (instruction != null)
-        {
-            instruction.postBulletPoints("Procedure", "Locate the solvent cabinet", "-Hint: flammable, yellow");
-        }
-        else
-        {
-            Debug.LogError("InstructionScript not found!");
-        }
+        // if (instruction != null)
+        // {
+        //     instruction.postBulletPoints("Procedure", "Locate the solvent cabinet", "-Hint: flammable, yellow");
+        // }
+        // else
+        // {
+        //     Debug.LogError("InstructionScript not found!");
+        // }
 
-        GameObject notebookObject = GameObject.Find("Notebook");
+        // GameObject notebookObject = GameObject.Find("Notebook");
 
-        if (notebookObject != null)
-        {
-            notebook = notebookObject.GetComponent<NotebookScript>();
-        }
+        // if (notebookObject != null)
+        // {
+        //     notebook = notebookObject.GetComponent<NotebookScript>();
+        // }
 
-        if (notebook != null)
-        {
-            notebook.postText("Instrument Parameters");
-        }
-        else
-        {
-            Debug.LogError("NotebookScript not found!");
-        }
+        // if (notebook != null)
+        // {
+        //     notebook.postText("Instrument Parameters");
+        // }
+        // else
+        // {
+        //     Debug.LogError("NotebookScript not found!");
+        // }
 
         // Initialize the first game step
         currentStep = GameStep.TrypsinAndMediumInHeater;
 
-        hud_text.text = "Welcome to the MTT Assay Lab!\nRetrieve “Trypsin EDTA” from the -20\u00B0C freezer and “complete medium”\nfrom the 4\u00B0C fridge and place in the incubator to start.";
+        // hud_text.text = "Welcome to the MTT Assay Lab!\nRetrieve “Trypsin EDTA” from the -20\u00B0C freezer and “complete medium”\nfrom the 4\u00B0C fridge and place in the incubator to start.";
+        hud_text.text = "Welcome to the MTT Assay Lab!";
     }
 
     void Update()
