@@ -1,17 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LiquidVolumeFX;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class MttAssaySceneScript : MonoBehaviour
 {
     public enum GameStep
     {
-        isTrue,
+        Start,
         TrypsinAndMediumInHeater,
         WarmReagents,
         BringToCellCultureHood,
@@ -50,11 +49,20 @@ public class MttAssaySceneScript : MonoBehaviour
         Done
     }
 
+    private enum TextLocation
+    {
+        Fridge,
+        Heater,
+        Hood,
+        Microscope
+    }
+    private StartBtn startBtn;
     private InstructionScript instruction;
     private NotebookScript notebook;
     private GameStep currentStep;
 
-    public TextMeshProUGUI hud_text;
+    private VrTextPanel vrTextPanel;
+    private TextMeshProUGUI hud_text;
 
     private bool trypsinAndMediumInIncubator = false;
     private bool trypsinAndMediumAreHeated = false;
@@ -116,6 +124,17 @@ public class MttAssaySceneScript : MonoBehaviour
         microscope = GameObject.Find("Microscope").GetComponent<Microscope>();
         // Debug.Log(microscope);
 
+        vrTextPanel = FindObjectOfType<VrTextPanel>();
+
+        // Get the game text object
+        hud_text = GameObject.Find("hud_text_tmp").GetComponent<TextMeshProUGUI>();
+
+        
+        if (hud_text == null)
+        {
+            Debug.LogError("Error no hud_text");
+        }
+
         // Find the instructionObject GameObject and get the InstructionScript component
         GameObject instructionObject = GameObject.Find("Instructions");
 
@@ -123,6 +142,8 @@ public class MttAssaySceneScript : MonoBehaviour
         {
             instruction = instructionObject.GetComponent<InstructionScript>();
         }
+
+        startBtn = FindAnyObjectByType<StartBtn>();
 
         // if (instruction != null)
         // {
@@ -150,16 +171,24 @@ public class MttAssaySceneScript : MonoBehaviour
         // }
 
         // Initialize the first game step
-        currentStep = GameStep.TrypsinAndMediumInHeater;
+        currentStep = GameStep.Start;
 
         // hud_text.text = "Welcome to the MTT Assay Lab!\nRetrieve “Trypsin EDTA” from the -20\u00B0C freezer and “complete medium”\nfrom the 4\u00B0C fridge and place in the incubator to start.";
-        hud_text.text = "Welcome to the MTT Assay Lab!";
+        hud_text.text = "Welcome to the MTT Assay Lab!\nClick START to begin";
+
+
     }
 
     void Update()
     {
         switch (currentStep)
         {
+            case GameStep.Start:
+                if (startBtn.start){
+                    vrTextPanel.CardMoveTo((int)TextLocation.Microscope);
+                    CompleteStep(GameStep.TrypsinAndMediumInHeater, "Place the Trypsin and Medium from the frige into the heater");
+                }
+            break;
             case GameStep.TrypsinAndMediumInHeater:
                 if (trypsinAndMediumInIncubator)
                 {
@@ -169,12 +198,14 @@ public class MttAssaySceneScript : MonoBehaviour
                 break;
             case GameStep.WarmReagents:
                 if (trypsinAndMediumAreHeated){
+                    vrTextPanel.CardMoveTo((int)TextLocation.Heater);
                     CompleteStep(GameStep.BringToCellCultureHood, "Bring the warmed reagent and medium to the “cell culture hood”");
                 }
                 break;
 
             case GameStep.BringToCellCultureHood:
                 if (TrypsinAndMediumInFumeHood){
+                    vrTextPanel.CardMoveTo((int)TextLocation.Hood);
                     CompleteStep(GameStep.RemoveSpentMedia, "Using the “stripette” remove the spent media from the\n“culture flask” containing cancer cells");
                 }
                 break;
@@ -257,6 +288,7 @@ public class MttAssaySceneScript : MonoBehaviour
                     CompleteStep(GameStep.PlaceHemocytomerUnderMicroscope, "Load hemocytometer into microscope");
                     microscope.microscopeActive = true;
                     hemocytometer.targetPipette.GetComponentInChildren<LiquidVolume>().level = 0f;
+                    vrTextPanel.CardMoveTo((int)TextLocation.Microscope);
                 }
             break;
             case GameStep.PlaceHemocytomerUnderMicroscope:
@@ -299,9 +331,6 @@ public class MttAssaySceneScript : MonoBehaviour
         Debug.Log($"Step {currentStep} completed. Proceed to: {nextStep}");
         currentStep = nextStep;
 
-        if (instruction != null)
-        {
-            hud_text.text = instructionMessage;
-        }
+        hud_text.text = instructionMessage;
     }
 }

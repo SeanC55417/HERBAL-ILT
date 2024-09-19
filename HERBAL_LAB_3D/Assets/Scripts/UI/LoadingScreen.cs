@@ -30,6 +30,7 @@ public class LoadingScreen : MonoBehaviour
         }
         else
         {
+            Debug.Log(sceneName);
             Debug.LogError("LoadingScreen instance not found!");
         }
     }

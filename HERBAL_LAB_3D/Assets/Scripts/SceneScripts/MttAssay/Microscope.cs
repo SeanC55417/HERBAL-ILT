@@ -17,11 +17,13 @@ public class Microscope : MonoBehaviour
     private PickupObject pickupObject;
     private bool viewing = false;
     private bool isSampleLoaded;
+    private GameManager gameManager;
 
     void Start()
     {
         pickupObject = FindObjectOfType<PickupObject>();
         microscopeView.SetActive(viewing);
+        gameManager = FindAnyObjectByType<GameManager>();
     }
     void Update()
     {
@@ -39,7 +41,8 @@ public class Microscope : MonoBehaviour
     {
         if (other.gameObject == sampleGameObject && microscopeActive)
         {
-            pickupObject.Take();
+            if (!gameManager.IsVR)
+            {pickupObject.Take();}
             sampleGameObject.transform.SetParent(null);
             sampleGameObject.transform.SetLocalPositionAndRotation(loadingTarget.position, loadingTarget.rotation);
             isSampleLoaded = true;

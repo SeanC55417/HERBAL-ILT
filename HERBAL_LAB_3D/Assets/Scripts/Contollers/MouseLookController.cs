@@ -55,7 +55,7 @@ public class MouseLookController : MonoBehaviour
     {
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-        int layerMask = LayerMask.GetMask("Default", "UI");  // maybe change to !IgnoreRaycast layer
+        int layerMask = LayerMask.GetMask("Default", "UI", "Menu");  // maybe change to !IgnoreRaycast layer
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
         {

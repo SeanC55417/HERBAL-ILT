@@ -1,3 +1,4 @@
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public class FloatingNotebookScript : MonoBehaviour
@@ -24,7 +25,7 @@ public class FloatingNotebookScript : MonoBehaviour
         // setNotebook();
     }
 
-    private void setNotebook()
+    public void setNotebook()
     {
         if (player == null)
         {

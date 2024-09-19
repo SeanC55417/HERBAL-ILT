@@ -17,12 +17,18 @@ public class LiquidTransfering : MonoBehaviour
     private PickupObject pickupObject;
     private LiquidVolume liquidVolume;
     private (Color, Color) pipetteColor;
+    private readonly float bufferTime = 5f;
+    private bool bufferCoroutineRunning = false;
+
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
         pickupObject = FindAnyObjectByType<PickupObject>();
         liquidVolume = container.GetComponent<LiquidVolume>();
+
+        gameManager = FindAnyObjectByType<GameManager>();
     }
 
     // Update is called once per frame
@@ -51,7 +57,33 @@ public class LiquidTransfering : MonoBehaviour
         cap.enabled = true;
     }
 
-    void OnClicked(){
+  void OnTriggerEnter(Collider other)
+    {
+       if (liquidTransferingActive && other.gameObject == pipette && gameManager.IsVR)
+       {
+            liquidTransferingActive = false;
+            OnClicked();
+       }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject == pipette && !bufferCoroutineRunning)
+        {
+            liquidTransferingActive = false;  // Disable immediately on exit
+            StartCoroutine(BufferCoroutine());
+        }
+    }
+
+    private IEnumerator BufferCoroutine()
+    {
+        bufferCoroutineRunning = true;  // Prevent multiple coroutines from running
+        yield return new WaitForSeconds(bufferTime);
+        liquidTransferingActive = true;
+        bufferCoroutineRunning = false;
+    }
+
+    public void OnClicked(){
         
         if (liquidVolume.detail == DETAIL.Multiple){
             MultiLayerTransfer();

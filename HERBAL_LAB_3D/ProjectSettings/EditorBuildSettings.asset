@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Garden.unity
     guid: 5220c9f9a722549709e1847a4d480448
+  - enabled: 1
+    path: Assets/Scenes/MttAssay.unity
+    guid: 70be39f1b629a4e2096225baab6c389d
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 4105043cfaf718b43a033c884d893b68, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: ea8f3ae96f21cef49be616c4232a9e8d, type: 2}
