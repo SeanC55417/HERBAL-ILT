@@ -185,8 +185,8 @@ public class MttAssaySceneScript : MonoBehaviour
         {
             case GameStep.Start:
                 if (startBtn.start){
-                    vrTextPanel.CardMoveTo((int)TextLocation.Microscope);
-                    CompleteStep(GameStep.TrypsinAndMediumInHeater, "Place the Trypsin and Medium from the frige into the heater");
+                    vrTextPanel.CardMoveTo((int)TextLocation.Fridge);
+                    CompleteStep(GameStep.TrypsinAndMediumInHeater, "Place the Trypsin and Medium from the fridge into the heater");
                 }
             break;
             case GameStep.TrypsinAndMediumInHeater:
