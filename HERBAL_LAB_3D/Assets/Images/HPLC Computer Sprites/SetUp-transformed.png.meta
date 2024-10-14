@@ -53,7 +53,7 @@ TextureImporter:
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: -1
+  spriteTessellationDetail: 0
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -108,18 +108,68 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
-    outline: []
+    sprites:
+    - serializedVersion: 2
+      name: SetUp-transformed_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 5296
+        height: 2832
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97943ba29daae9d418f64643cf2d9bc2
+      internalID: 602670101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline:
+    - - {x: -2028.4297, y: 724.9033}
+      - {x: -2099.9448, y: 727.34375}
+      - {x: -2096.694, y: 770.4131}
+      - {x: -1988.118, y: 771.7173}
+      - {x: -1990.8904, y: 720.1614}
+      - {x: -1592.8369, y: 715.1511}
+      - {x: -1592.637, y: 674.6284}
+      - {x: -1990.3794, y: 682.3574}
+      - {x: -1988.9379, y: 492.0503}
+      - {x: -2094.252, y: 491.11243}
+      - {x: -2093.4758, y: 532.2378}
+      - {x: -2021.9285, y: 523.3607}
+    - - {x: -767.16223, y: 715.1511}
+      - {x: -1258.0166, y: 718.4016}
+      - {x: -1264.5181, y: 682.64453}
+      - {x: -767.1625, y: 682.6443}
+    - - {x: -432.34155, y: 685.89526}
+      - {x: -432.34155, y: 715.15137}
+      - {x: 45.50952, y: 715.15137}
+      - {x: 45.50952, y: 685.89526}
+    - - {x: 390.08276, y: 689.146}
+      - {x: 390.08276, y: 715.15137}
+      - {x: 871.1846, y: 715.15137}
+      - {x: 871.1846, y: 689.146}
+    - - {x: -2648, y: -1416}
+      - {x: -2648, y: 1416}
+      - {x: 2648, y: 1416}
+      - {x: 2648, y: -1416}
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      SetUp-transformed_0: 602670101
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
