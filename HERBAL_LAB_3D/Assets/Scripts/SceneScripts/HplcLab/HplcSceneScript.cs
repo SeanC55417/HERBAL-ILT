@@ -8,6 +8,7 @@ public class HplcSceneScript : MonoBehaviour
 {
     public enum GameStep
     {
+        Start,
         OpenFireCabinet,
         BringWaterToHplc,
         BringMethanolToHplc,
@@ -21,6 +22,7 @@ public class HplcSceneScript : MonoBehaviour
         KnowledgeCheck1Q2,
         
         OpenHplcTraySlot,
+        SetSampleTray,
         PlaceTrayInHplc,
         CloseHplcTraySlot,
 
@@ -42,14 +44,26 @@ public class HplcSceneScript : MonoBehaviour
 
         Done
     }
+
+    private enum TextLocation
+    {
+        FireCabinetAndComputer,
+        HPLC,
+        SampleTable
+    }
     
+    private StartBtn startBtn;
     private InstructionScript instruction;
+    private QuestionScript question;
+    private QuestionScript questionScript;
     private NotebookScript notebook;
     private GameStep currentStep;
     private GameObject computerScreen = null;
 
     public TextMeshProUGUI hud_text;
     public Confetti confetti;
+    private VrTextPanel vrTextPanel;
+   
 
     void Start()
     {
@@ -60,6 +74,14 @@ public class HplcSceneScript : MonoBehaviour
         {
             instruction = instructionObject.GetComponent<InstructionScript>();
         }
+
+        GameObject QuestionObject = GameObject.Find("Questions");
+
+        if (QuestionObject != null)
+        {
+            questionScript = QuestionObject.GetComponent<QuestionScript>();
+        }
+
 
         // Ensure the script is found before trying to call its methods
         if (instruction != null)
@@ -88,10 +110,10 @@ public class HplcSceneScript : MonoBehaviour
             Debug.LogError("NotebookScript not found!");
         }
 
-        // Initialize the first game step
-        currentStep = GameStep.OpenFireCabinet;
-
-        hud_text.text =  "Welcome to the HPLC Lab!\nOpen the flammable solvent cabinet to obtain your mobile";
+        currentStep = GameStep.Start;
+        hud_text.text = "Welcome to the HPLC Lab!\nOpen the flammable solvent cabinet to obtain your mobile";
+        vrTextPanel = FindObjectOfType<VrTextPanel>();
+        startBtn = FindAnyObjectByType<StartBtn>();
 
     }
 
@@ -99,6 +121,14 @@ public class HplcSceneScript : MonoBehaviour
     {
         switch (currentStep)
         {
+            case GameStep.Start:
+                if (startBtn.start){
+                    vrTextPanel.CardMoveTo((int)TextLocation.FireCabinetAndComputer);
+                    Debug.Log("move");
+
+                    CompleteStep(GameStep.OpenFireCabinet, "Welcome to the HPLC Lab!\nOpen the flammable solvent cabinet to obtain your mobile");
+                }
+            break;
             case GameStep.OpenFireCabinet:
                 if (IsFireCabinetOpened())
                 {
@@ -120,6 +150,7 @@ public class HplcSceneScript : MonoBehaviour
             case GameStep.BringMethanolToHplc:
                 if (IsRbObjectSet("Solvent Bottle Methanol"))
                 {
+                    vrTextPanel.CardMoveTo((int)TextLocation.HPLC);
                     CompleteStep(GameStep.OpenHplcOven, "Open the HPLC column compartment");
                     instruction.postBulletPointWithTab("Equip the HPLC with the C18 column from the drawer below the computer", "-Hint: Pre-Column comes first");
                     notebook.postText("\nOrganic Sol. B: Methanol");
@@ -134,16 +165,16 @@ public class HplcSceneScript : MonoBehaviour
             case GameStep.OpenDrawer:
                 if (IsColumnDrawerOpen())
                 {
-                    CompleteStep(GameStep.PlaceColumnInHplc, "Place the column inside the column compartment and align with the flow direction");
+                    CompleteStep(GameStep.SelectProperFlowDirection, "Place the column inside the column compartment");
                     notebook.postText("Column: Phenomenex Kinetex C18 (4.6 x 150 mm) 100 Å");
                 }
                 break;
-            // case GameStep.SelectProperFlowDirection:
-            //     if (IsRbObjectSet("ColumnRod"))
-            //     {
-            //         CompleteStep(GameStep.SelectProperFlowDirection, "Select the proper flow direction");
-            //     }
-            //     break;
+            case GameStep.SelectProperFlowDirection:
+                if (flowDirectionSet())
+                {
+                    CompleteStep(GameStep.PlaceColumnInHplc, "Select the proper flow direction");
+                }
+                break;
             case GameStep.PlaceColumnInHplc:
                 if (IsRbObjectSet("ColumnRod"))
                 {
@@ -154,30 +185,39 @@ public class HplcSceneScript : MonoBehaviour
             case GameStep.CloseHplcOven:
                 if (!IsHplcOvenOpen())
                 {
-                    CompleteStep(GameStep.KnowledgeCheck1Q1, "Press M to bring up Notebook to do KnowledgeCheck1");
-                    instruction.postKnowledgeCheck("Question1");
+                    CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC vial rack");
+                    // CompleteStep(GameStep.KnowledgeCheck1Q1, "Press M to bring up Notebook to do KnowledgeCheck1");
+                    questionScript.PostQuestion("Question1");
                 }
                 break;
 
-            case GameStep.KnowledgeCheck1Q1:
-                if (instruction.getNumAnswered() > 0){
-                    CompleteStep(GameStep.KnowledgeCheck1Q2, "Great Job!");
-                    instruction.postKnowledgeCheck("Question2");
-                }
-                break;
-            case GameStep.KnowledgeCheck1Q2:
-                if (instruction.getNumAnswered() > 1){
-                    CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC vial rack");
-                }
-                break;
+            // case GameStep.KnowledgeCheck1Q1:
+            //     if (instruction.getNumAnswered() > 0){
+            //         CompleteStep(GameStep.KnowledgeCheck1Q2, "Great Job!");
+            //         instruction.postKnowledgeCheck("Question2");
+            //     }
+            //     break;
+            // case GameStep.KnowledgeCheck1Q2:
+            //     if (instruction.getNumAnswered() > 1){
+            //         CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC vial rack");
+            //     }
+            //     break;
             case GameStep.OpenHplcTraySlot:
                 if(IsTraySlotOpen())
                 {
+                    vrTextPanel.CardMoveTo((int)TextLocation.SampleTable);
+                    CompleteStep(GameStep.SetSampleTray, "Place sample vials into sample tray (hint: click on the samples)");
+                }
+                break;
+            case GameStep.SetSampleTray:
+                if (ChildrenInParent("Sample Bottles") == 0)
+                {
+                    vrTextPanel.CardMoveTo((int)TextLocation.HPLC);
                     CompleteStep(GameStep.PlaceTrayInHplc, "Place the sample tray in the vial rack");
                 }
                 break;
             case GameStep.PlaceTrayInHplc:
-                if(IsRbObjectSet("Tray"))
+                if(IsRbObjectSet("Left Vail Rack"))
                 {
                     CompleteStep(GameStep.CloseHplcTraySlot, "Close the HPLC vial rack");
                 }
@@ -185,6 +225,7 @@ public class HplcSceneScript : MonoBehaviour
             case GameStep.CloseHplcTraySlot:
                 if (!IsTraySlotOpen()) 
                 {
+                    vrTextPanel.CardMoveTo((int)TextLocation.FireCabinetAndComputer);
                     CompleteStep(GameStep.EnterMethod, "Enter your instrument starting parameters on the computer by selecting the white boxes");
                     FlashHplcButtons();
                 }
@@ -301,30 +342,31 @@ public class HplcSceneScript : MonoBehaviour
         return false;
     }
 
-    // bool flowDirectionSet()
-    // {
-    //     GameObject FlowDirectionDown = GameObject.Find("Flow Down Color");
+    bool flowDirectionSet()
+    {
+        GameObject FlowDirectionDown = GameObject.Find("Flow Down Color");
 
-    //     if (FlowDirectionDown != null)
-    //     {
-    //         Image imageComponent = FlowDirectionDown.GetComponent<Image>();
+        if (FlowDirectionDown != null)
+        {
+            Image imageComponent = FlowDirectionDown.GetComponent<Image>();
 
-    //         if (imageComponent != null)
-    //         {
-    //             Color desiredColor;
-    //             if (ColorUtility.TryParseHtmlString("#05FF00", out desiredColor))
-    //             {
-    //                 return true;
-    //             }
-    //         }
-    //     }
+            if (imageComponent != null)
+            {
+                Color desiredColor;
+                if (ColorUtility.TryParseHtmlString("#05FF00", out desiredColor))
+                {
+                    return true;
+                }
+            }
+        }
 
-    //     return false;
-    // 
+        return false;
+    }
+    
 
     bool IsHplcOvenOpen()
     {
-        GameObject hplcOvenDoor = GameObject.Find("Hplc Panel Hinge");
+        GameObject hplcOvenDoor = GameObject.Find("Column Door");
         if (hplcOvenDoor != null)
         {
             float yRotation = hplcOvenDoor.transform.localRotation.eulerAngles.y;
@@ -362,12 +404,12 @@ public class HplcSceneScript : MonoBehaviour
 
     bool IsTraySlotOpen()
     {
-        GameObject columnDrawer = GameObject.Find("Tray Slot");
+        GameObject columnDrawer = GameObject.Find("Left Vail Rack");
         if (columnDrawer != null)
         {
-            float zPosition = columnDrawer.transform.localPosition.z;
+            float xPosition = columnDrawer.transform.localPosition.x;
 
-            if (zPosition < -0.45f)
+            if (xPosition > 0.6)
             {
                 return true;
             }
@@ -378,7 +420,6 @@ public class HplcSceneScript : MonoBehaviour
         }
         return false;
     }
-
 
     bool IsRbObjectSet(string objectName)
     {

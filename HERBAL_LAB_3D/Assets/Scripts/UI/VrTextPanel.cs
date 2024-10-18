@@ -13,18 +13,18 @@ public class VrTextPanel : MonoBehaviour
     public float scaleDuration = 0.5f;
     public Transform[] textLocations;
     private Vector3 cardScale;
-    private bool vrActive = false;
+    private bool vrActive = true;
 
     void Start()
     {
-        if (FindAnyObjectByType<XROrigin>())
-        {
-            vrActive = true;
-        }
-        else
-        {
-            Card.SetActive(false);
-        }
+        // if (FindAnyObjectByType<XROrigin>())
+        // {
+        //     vrActive = true;
+        // }
+        // else
+        // {
+        //     Card.SetActive(false);
+        // }
         cardScale = Card.transform.localScale;
     }
 
