@@ -2164,8 +2164,8 @@ MonoBehaviour:
   sensitivity: 100
   player: {fileID: 3676255347580839145}
   targetFrameRate: 60
-  labelObject: {fileID: 0}
   pickupObjectScript: {fileID: 0}
+  labelObject: {fileID: 0}
 --- !u!1 &3193788078467634823
 GameObject:
   m_ObjectHideFlags: 0

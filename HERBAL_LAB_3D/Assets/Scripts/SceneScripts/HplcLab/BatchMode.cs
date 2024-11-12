@@ -13,6 +13,7 @@ public class BatchMode : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("START FUNCTION RUNNING IN BATCHMODE");
         batchImage = gameObject.GetComponent<Image>();
         if (images[1] != null)
         {
@@ -27,6 +28,11 @@ public class BatchMode : MonoBehaviour
         {
             Debug.LogError("Image component is not attached to the game object");
         }
+    }
+
+    public void Test()
+    {
+        Debug.Log("running");
     }
 
     public void makeBarkExtractAppear()
@@ -86,6 +92,7 @@ public class BatchMode : MonoBehaviour
 
     public void AutoComplete()
     {
+        Debug.Log("THIS SHOULD BE RUNNING");
         if (batchImage == null)
         {
             batchImage = gameObject.GetComponent<Image>();

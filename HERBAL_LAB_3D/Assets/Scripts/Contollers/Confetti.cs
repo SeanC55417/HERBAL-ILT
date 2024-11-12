@@ -12,7 +12,7 @@ public class Confetti : MonoBehaviour
     {
         if (confetti != null)
         {   
-            playerHudText.text = hud_text;
+            // playerHudText.text = hud_text;
             confetti.Play();
             StartCoroutine(StopConfettiAfterDelay(duration_sec));
         }

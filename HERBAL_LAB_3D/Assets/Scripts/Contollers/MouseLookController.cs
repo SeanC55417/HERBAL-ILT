@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Text;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MouseLookController : MonoBehaviour
 {
@@ -15,28 +16,31 @@ public class MouseLookController : MonoBehaviour
 
     private float rotationX = 0f;
     private float customDeltaTime;
-
-    // float timeRequiredForLabel = 2.0f;
-    // float hitTime = 0.0f;
-    // bool isHitting = false;
-
-    public GameObject labelObject;
-    // private Dictionary<string, int> itemIndexes = new Dictionary<string, int>();
-    private bool showingLabel = false;
-    GameObject currentLabel = null;
     public PickupObject pickupObjectScript;
+
+    // Goes in labelScript
+    public GameObject labelObject;
+    private GameObject currentLabel;
+    private HashSet<string> itemsWithDescriptionsSet;
+    private float highestYPosition;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false; // Ensure the cursor is hidden
+        Cursor.visible = false;
         customDeltaTime = 1.0f / targetFrameRate;
+        getItemDescriptions();
     }
 
     void Update()
     {
         HandleMouseMovement();
         PerformRaycast();
+
+        if (currentLabel != null)
+        {
+            currentLabel.transform.LookAt(Camera.main.transform);
+        }
     }
 
     void HandleMouseMovement()
@@ -55,7 +59,7 @@ public class MouseLookController : MonoBehaviour
     {
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-        int layerMask = LayerMask.GetMask("Default", "UI", "Menu");  // maybe change to !IgnoreRaycast layer
+        int layerMask = LayerMask.GetMask("Default", "UI", "Menu");
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
         {
@@ -63,12 +67,15 @@ public class MouseLookController : MonoBehaviour
         }
     }
 
-    void showLabel(GameObject item)
+    void getItemDescriptions()
     {
-        TextAsset csvFile = Resources.Load<TextAsset>("Data/HPLC Lab Item Descriptions");
+        Scene currentScene = SceneManager.GetActiveScene();
+        TextAsset csvFile = Resources.Load<TextAsset>("Data/" + currentScene.name + " Item Descriptions");
+        // Debug.Log("Data/" + currentScene.name + "Lab Item Descriptions");
+        // TextAsset csvFile = Resources.Load<TextAsset>("Data/HPLC Lab Item Descriptions");
         using (StringReader sr = new StringReader(csvFile.text))
         {
-            List<string> firstColumnValues = new List<string>();
+            itemsWithDescriptionsSet = new HashSet<string>();
             string line;
 
             while ((line = sr.ReadLine()) != null)
@@ -78,39 +85,49 @@ public class MouseLookController : MonoBehaviour
                 if (columns.Length > 0)
                 {
                     string firstColumnValue = columns[0];
-                    firstColumnValues.Add(firstColumnValue);
-                }
-            }
-
-            // Process the first column values
-            foreach (string value in firstColumnValues)
-            {
-                if (item.name == value)
-                {
-                    showingLabel = true;
-                    Vector3 itemPosition = item.transform.position;
-                    float newYPosition = item.transform.position.y + 0.4f;
-
-                    
-                    
-                    Vector3 targetPosition = new Vector3(itemPosition.x, newYPosition, itemPosition.z);
-
-                    currentLabel = Instantiate(labelObject);
-                    currentLabel.transform.position = targetPosition;
-                    currentLabel.transform.LookAt(player.transform.position);
-                    currentLabel.transform.Rotate(0, 180, 0);
-
-                    TextMeshProUGUI currentLabelText = currentLabel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-                    currentLabelText.text = value;
+                    itemsWithDescriptionsSet.Add(firstColumnValue);
                 }
             }
         }
+    }
 
+    private IEnumerator Wait(float secondsWaiting)
+    {
+        yield return new WaitForSeconds(secondsWaiting);
+    }
+
+    void showLabel(GameObject itemSearch)
+    {
+        if (currentLabel == null && itemsWithDescriptionsSet.Contains(itemSearch.name) && pickupObjectScript.heldObject == null)
+        {
+            currentLabel = Instantiate(labelObject, player.transform.parent.transform);
+            // currentLabel.transform.localScale = Vector3.one; // Fix the scale
+            
+            // currentLabel.transform.position = itemSearch.transform.position;
+            highestYPosition = 0;
+            FindHighestObject(itemSearch);
+            // Debug.Log("highest Y position: " + highestYPosition);
+            currentLabel.transform.position = new Vector3(itemSearch.transform.position.x, highestYPosition + .35f, itemSearch.transform.position.z);
+            // currentLabel.transform.SetParent(itemSearch.transform);
+            TextMeshProUGUI labelText = currentLabel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            if (labelText != null)
+            {
+                labelText.text = itemSearch.name;
+                // Debug.Log("Show item label for " + itemSearch.name);
+            }
+            else
+            {
+                Debug.LogError("TextMeshProUGUI component not found on label object.");
+            }
+        }
+        else if (pickupObjectScript.heldObject != null && currentLabel != null)
+        {
+            Destroy(currentLabel);
+        }
     }
 
     void HandleInteraction(RaycastHit hit)
     {
-        // Ensure the object has a Button component and is interactable
         GameObject hitObject = hit.collider.gameObject;
         Button button = hitObject.GetComponent<Button>();
         if (button != null && button.interactable)
@@ -120,52 +137,151 @@ public class MouseLookController : MonoBehaviour
                 button.onClick.Invoke();
             }
         }
-        else if (hitObject.layer == LayerMask.NameToLayer("Interactable"))
+
+        Debug.Log(hitObject.name);
+        if (itemsWithDescriptionsSet != null && itemsWithDescriptionsSet.Contains(hitObject.name))
         {
-            if (showingLabel == false && pickupObjectScript.GetObject() == null)
+            if (itemsWithDescriptionsSet.Contains(hitObject.name))
             {
                 showLabel(hitObject);
             }
         }
-        else
+        else if (itemsWithDescriptionsSet != null && itemsWithDescriptionsSet.Contains(hitObject.transform.parent.name))
         {
-            showingLabel = false;
+            if (itemsWithDescriptionsSet.Contains(hitObject.name))
+            {
+                showLabel(hitObject.transform.parent.gameObject);
+            }
+        }
+        else if (currentLabel != null)
+        {
             Destroy(currentLabel);
+            currentLabel = null;
+        }
+    }
+
+    float FindHighestObject(GameObject Item)
+    {
+        // Check the condition for this object
+        if (Item.transform.position.y > highestYPosition)
+        {
+            highestYPosition = Item.transform.position.y;
+            
         }
 
+        // Iterate through all children of the current object
+        foreach (Transform child in Item.transform)
+        {
+            FindHighestObject(child.gameObject);
+        }
 
+        return highestYPosition;
+    }
 
+    // USE THIS TO FIND THE TOP OF OBJECTS ITERATING THROUGH CHILD OBJECTS
+    // GameObject FindHighestObject(GameObject Item)
+    // {
+    //     GameObject highestObject = null;
+    //     float highestValue = float.MinValue;
 
-        // else if (hit.collider.gameObject.CompareTag("SampleBottle"))
-        // {
-        //     if (!isHitting)
-        //     {
-        //         isHitting = true;
-        //         hitTime = Time.time;
-        //     }
-        //     else
-        //     {
-        //         if (Time.time - hitTime >= timeRequiredForLabel)
-        //         {
-        //             Debug.Log("label");
-                    
-        //             Transform labelTransform = labelObject.transform;
-        //             // Vector3 targetPosition = labelTransform.anchoredPosition
+    //     
+    //         if (item != null)
+    //         {
+    //             // Get object's y position
+    //             float yPosition = obj.transform.position.y;
+                
+    //             // Get object's height if it has a collider
+    //             float objectHeight = 0f;
+    //             Collider objCollider = obj.GetComponent<Collider>();
+    //             if (objCollider != null)
+    //             {
+    //                 objectHeight = objCollider.bounds.size.y;
+    //             }
 
-        //             // Makes the label look at the player
-        //             labelTransform.LookAt(player.position);
-        //             labelTransform.Rotate(0, 180, 0);
+    //             // Combine y position and height
+    //             float totalHeight = yPosition + objectHeight;
 
-        //             // Optionally, make the label object active
-        //             labelObject.SetActive(true);
-        //         }
-        //     }
-        // }
-        // else
-        // {
-        //     isHitting = false;
-        //     hitTime = 0.0f; // Reset the hit time
-        //     labelObject.SetActive(false); // Hide the label if not hitting the target
-        // }
+    //             // Check if it's the highest so far
+    //             if (totalHeight > highestValue)
+    //             {
+    //                 highestValue = totalHeight;
+    //                 highestObject = obj;
+    //             }
+    //         }
+    //     }
+
+    //     return highestObject;
+    // }
+}
+
+// IEnumerator HideLabelWithDelay()
+// {
+//     yield return new WaitForSeconds(delayTime); // Wait for a short delay before hiding the label
+//     if (currentLabel != null)
+//     {
+//         Destroy(currentLabel);
+//         currentLabel = null;
+//     }
+// }
+
+/*
+
+private Coroutine labelCoroutine;
+private float hoverDelay = 0.5f; // Half a second delay
+
+void showLabel(GameObject itemSearch)
+{
+    if (currentLabel == null && itemsWithDescriptionsSet.Contains(itemSearch.name) && pickupObjectScript.heldObject == null)
+    {
+        if (labelCoroutine == null) // Start the coroutine only if it's not already running
+        {
+            labelCoroutine = StartCoroutine(ShowLabelAfterDelay(itemSearch));
+        }
+    }
+    else if (pickupObjectScript.heldObject != null && currentLabel != null)
+    {
+        Destroy(currentLabel);
+        currentLabel = null;
+        StopLabelCoroutine();
     }
 }
+
+IEnumerator ShowLabelAfterDelay(GameObject itemSearch)
+{
+    yield return new WaitForSeconds(hoverDelay); // Wait for the hover delay before showing the label
+
+    if (currentLabel == null) // Ensure the label hasn't already been shown
+    {
+        currentLabel = Instantiate(labelObject, player.transform.parent.transform);
+        currentLabel.transform.position = new Vector3(itemSearch.transform.position.x, itemSearch.transform.position.y + 0.5f, itemSearch.transform.position.z);
+        TextMeshProUGUI labelText = currentLabel.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+
+        if (labelText != null)
+        {
+            labelText.text = itemSearch.name;
+        }
+        else
+        {
+            Debug.LogError("TextMeshProUGUI component not found on label object.");
+        }
+    }
+}
+
+void HandleInteraction(RaycastHit hit)
+{
+    GameObject hitObject = hit.collider.gameObject;
+
+    
+}
+
+void StopLabelCoroutine()
+{
+    if (labelCoroutine != null)
+    {
+        StopCoroutine(labelCoroutine); // Stop the coroutine if it's running
+        labelCoroutine = null;
+    }
+}
+
+
+*/

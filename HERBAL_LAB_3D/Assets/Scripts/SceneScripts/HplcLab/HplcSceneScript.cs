@@ -54,8 +54,7 @@ public class HplcSceneScript : MonoBehaviour
     
     private StartBtn startBtn;
     private InstructionScript instruction;
-    private QuestionScript question;
-    private QuestionScript questionScript;
+    public QuestionScript questionScript;
     private NotebookScript notebook;
     private GameStep currentStep;
     private GameObject computerScreen = null;
@@ -74,14 +73,6 @@ public class HplcSceneScript : MonoBehaviour
         {
             instruction = instructionObject.GetComponent<InstructionScript>();
         }
-
-        GameObject QuestionObject = GameObject.Find("Questions");
-
-        if (QuestionObject != null)
-        {
-            questionScript = QuestionObject.GetComponent<QuestionScript>();
-        }
-
 
         // Ensure the script is found before trying to call its methods
         if (instruction != null)
@@ -111,7 +102,7 @@ public class HplcSceneScript : MonoBehaviour
         }
 
         currentStep = GameStep.Start;
-        hud_text.text = "Welcome to the HPLC Lab!\nOpen the flammable solvent cabinet to obtain your mobile";
+        hud_text.text = "Welcome to the HPLC Lab!";
         vrTextPanel = FindObjectOfType<VrTextPanel>();
         startBtn = FindAnyObjectByType<StartBtn>();
 
@@ -126,7 +117,7 @@ public class HplcSceneScript : MonoBehaviour
                     vrTextPanel.CardMoveTo((int)TextLocation.FireCabinetAndComputer);
                     Debug.Log("move");
 
-                    CompleteStep(GameStep.OpenFireCabinet, "Welcome to the HPLC Lab!\nOpen the flammable solvent cabinet to obtain your mobile");
+                    CompleteStep(GameStep.OpenFireCabinet, "Open the flammable solvent cabinet to obtain your mobile");
                 }
             break;
             case GameStep.OpenFireCabinet:
@@ -165,43 +156,43 @@ public class HplcSceneScript : MonoBehaviour
             case GameStep.OpenDrawer:
                 if (IsColumnDrawerOpen())
                 {
-                    CompleteStep(GameStep.SelectProperFlowDirection, "Place the column inside the column compartment");
+                    CompleteStep(GameStep.PlaceColumnInHplc, "Place the column inside the column compartment");
                     notebook.postText("Column: Phenomenex Kinetex C18 (4.6 x 150 mm) 100 Å");
+                }
+                break;
+            case GameStep.PlaceColumnInHplc:
+                if (ChildrenInParent("Column Latches") == 1)
+                {
+                    CompleteStep(GameStep.SelectProperFlowDirection, "Select the proper flow direction");
+                    instruction.postText("Press M to bring up Notebook to do KnowledgeCheck1");
                 }
                 break;
             case GameStep.SelectProperFlowDirection:
                 if (flowDirectionSet())
                 {
-                    CompleteStep(GameStep.PlaceColumnInHplc, "Select the proper flow direction");
-                }
-                break;
-            case GameStep.PlaceColumnInHplc:
-                if (IsRbObjectSet("ColumnRod"))
-                {
                     CompleteStep(GameStep.CloseHplcOven, "Close the column compartment");
-                    instruction.postText("Press M to bring up Notebook to do KnowledgeCheck1");
                 }
-                break;
+            break;
             case GameStep.CloseHplcOven:
                 if (!IsHplcOvenOpen())
                 {
-                    CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC vial rack");
-                    // CompleteStep(GameStep.KnowledgeCheck1Q1, "Press M to bring up Notebook to do KnowledgeCheck1");
+                    // CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC vial rack");
+                    CompleteStep(GameStep.KnowledgeCheck1Q1, "");
                     questionScript.PostQuestion("Question1");
                 }
                 break;
-
-            // case GameStep.KnowledgeCheck1Q1:
-            //     if (instruction.getNumAnswered() > 0){
-            //         CompleteStep(GameStep.KnowledgeCheck1Q2, "Great Job!");
-            //         instruction.postKnowledgeCheck("Question2");
-            //     }
-            //     break;
-            // case GameStep.KnowledgeCheck1Q2:
-            //     if (instruction.getNumAnswered() > 1){
-            //         CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC vial rack");
-            //     }
-            //     break;
+            case GameStep.KnowledgeCheck1Q1:
+                if (questionScript.getNumAnswered() > 0){
+                    CompleteStep(GameStep.KnowledgeCheck1Q2, "Great Job!");
+                    questionScript.PostQuestion("Question2");
+                }
+                break;
+            case GameStep.KnowledgeCheck1Q2:
+                if (questionScript.getNumAnswered() > 1){
+                    CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC vial rack");
+                    questionScript.deactivateQuestionPanel();
+                }
+                break;
             case GameStep.OpenHplcTraySlot:
                 if(IsTraySlotOpen())
                 {
@@ -217,7 +208,7 @@ public class HplcSceneScript : MonoBehaviour
                 }
                 break;
             case GameStep.PlaceTrayInHplc:
-                if(IsRbObjectSet("Left Vail Rack"))
+                if(ChildrenInParent("Tray Destination") == 1)
                 {
                     CompleteStep(GameStep.CloseHplcTraySlot, "Close the HPLC vial rack");
                 }
@@ -232,19 +223,19 @@ public class HplcSceneScript : MonoBehaviour
                 break;
             case GameStep.EnterMethod:
                 if (ChildrenInParent("Set Up Screen") == 3){
-                    CompleteStep(GameStep.KnowledgeCheck2Q1, "Press M to bring up the notebook to do KnowledgeCheck2");
-                    instruction.postKnowledgeCheck("Question3");
+                    CompleteStep(GameStep.KnowledgeCheck2Q1, "");
+                    questionScript.PostQuestion("Question3");
                 }
                 break;
             case GameStep.KnowledgeCheck2Q1:
-                int answered = instruction.getNumAnswered();
-                if (instruction.getNumAnswered() > 2){
+                if (questionScript.getNumAnswered() > 2){
                     CompleteStep(GameStep.KnowledgeCheck2Q2, "");
-                    instruction.postKnowledgeCheck("Question4");
+                    questionScript.PostQuestion("Question4");
                 }
                 break;
             case GameStep.KnowledgeCheck2Q2:
-                if (instruction.getNumAnswered() > 3){
+                if (questionScript.getNumAnswered() > 3){
+                    questionScript.deactivateQuestionPanel();
                     CompleteStep(GameStep.SelectPump, "Awesome!\nRefer back to the HPLC computer screen and press pump “ON” to begin equilibrating your column");
                     GameObject pumpButton = GameObject.Find("Pump Button");
                     Collider collider = pumpButton.GetComponent<Collider>();
@@ -286,35 +277,39 @@ public class HplcSceneScript : MonoBehaviour
                 break;
             case GameStep.RunHplc:
                 GameObject allGraphsScreen = GameObject.Find("PC Screen Graphs");
-                if (allGraphsScreen != null){
+                if (allGraphsScreen != null)
+                {
                     CompleteStep(GameStep.KnowledgeCheck3Q1, "Press M to bring up the notebook to do KnowledgeCheck3");
-                    instruction.postKnowledgeCheck("Question5");
+                    questionScript.PostQuestion("Question5");
                 }
                 break;
             case GameStep.KnowledgeCheck3Q1:
-                if (instruction.getNumAnswered() > 4){
+                if (questionScript.getNumAnswered() > 4){
                     CompleteStep(GameStep.KnowledgeCheck3Q2, "");
-                    instruction.postKnowledgeCheck("Question6");
+                    questionScript.PostQuestion("Question6");
                 }
                 break;
             case GameStep.KnowledgeCheck3Q2:
-                if (instruction.getNumAnswered() > 5){
+                if (questionScript.getNumAnswered() > 5){
                     CompleteStep(GameStep.KnowledgeCheck4Q1, "Refer to the chromatograms you generated during the experiment to complete the next set of questions");
-                    instruction.postKnowledgeCheck("Question7");
+                    questionScript.PostQuestion("Question7");
                 }
                 break;
             case GameStep.KnowledgeCheck4Q1:
-                if (instruction.getNumAnswered() > 6){
-                    CompleteStep(GameStep.KnowledgeCheck4Q2, "");
-                    instruction.postKnowledgeCheck("Question8");
+                if (questionScript.getNumAnswered() > 6){
+                    CompleteStep(GameStep.KnowledgeCheck4Q2, "Congratulations you finished the module! Use the notebook to return to the home screen");
+                    questionScript.PostQuestion("Question8");
+                    Debug.Log("running 1");
                 }
                 break;
             case GameStep.KnowledgeCheck4Q2:
-                if (instruction.getNumAnswered() > 8){
-                    CompleteStep(GameStep.Done, "");
+                if (questionScript.getNumAnswered() > 8){
+                    CompleteStep(GameStep.Done, "Congratulations you finished the module! Use the notebook to return to the home screen");
+                    questionScript.deactivateQuestionPanel();
                 }
                 break;
             case GameStep.Done:
+                Debug.Log("done 1");
                 confetti.StartConfetti("Congratulations you finished the module! Use the notebook to return to the home screen", 10);
                 break;
 
@@ -355,14 +350,19 @@ public class HplcSceneScript : MonoBehaviour
                 Color desiredColor;
                 if (ColorUtility.TryParseHtmlString("#05FF00", out desiredColor))
                 {
-                    return true;
+                    // Compare the color of the image component to the desired color
+                    if (imageComponent.color == desiredColor)
+                    {
+                        Debug.Log("green");
+                        return true;
+                    }
                 }
             }
         }
 
         return false;
     }
-    
+
 
     bool IsHplcOvenOpen()
     {
@@ -517,4 +517,10 @@ public class HplcSceneScript : MonoBehaviour
             hud_text.text = instructionMessage;
         }
     }
+
+    private IEnumerator Wait(float secondsWaiting)
+    {
+        yield return new WaitForSeconds(secondsWaiting);
+    }
+
 }
