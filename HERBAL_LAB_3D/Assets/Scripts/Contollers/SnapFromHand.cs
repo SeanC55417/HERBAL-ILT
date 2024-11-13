@@ -18,10 +18,15 @@ public class SnapFromHand : MonoBehaviour
         { 
             // Check if PickupObject script exists on any game object
             PickupObject pickupScript = FindObjectOfType<PickupObject>();
+
             if (pickupScript != null)
             {   
                 inputObject = pickupScript.GetObject();
                 pickupScript.Drop(); // Call Drop() if PickupObject script is found
+            }
+            else
+            {
+                inputObject = other.gameObject;
             }
 
             StartCoroutine(SmoothSnap(inputObject.transform));

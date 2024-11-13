@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using TMPro;
 
+
 public class QuestionScript : MonoBehaviour
 {
     private Dictionary<string, string[]> knowledgeCheckQuestions = new Dictionary<string, string[]>();
@@ -126,6 +127,11 @@ public class QuestionScript : MonoBehaviour
                 BoxCollider boxCollider = currentAnswerOption.GetComponent<BoxCollider>();
                 button.onClick.AddListener(() => checkAnswer(button, childTextMeshPro));
                 currentAnswerOption.name = "Answer " + i;
+                UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable xrInteractable = currentAnswerOption.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRSimpleInteractable>();
+
+                if (xrInteractable != null) {
+                    xrInteractable.selectEntered.AddListener((interactor) => checkAnswer(button, childTextMeshPro));
+                }
 
                 childTextMeshPro.text = knowledgeCheckQuestions[questionKey][i];
                 if (childTextMeshPro.preferredHeight > cellHeight || answerCount < 4)

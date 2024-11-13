@@ -58,7 +58,6 @@ public class HplcSceneScript : MonoBehaviour
     private NotebookScript notebook;
     private GameStep currentStep;
     private GameObject computerScreen = null;
-    public GameObject notebookObject;
 
     public TextMeshProUGUI hud_text;
     public Confetti confetti;
@@ -67,43 +66,43 @@ public class HplcSceneScript : MonoBehaviour
 
     void Start()
     {
-        // // Find the instructionObject GameObject and get the InstructionScript component
-        // GameObject instructionObject = GameObject.Find("Instructions");
+        // Find the instructionObject GameObject and get the InstructionScript component
+        GameObject instructionObject = GameObject.Find("Instructions");
 
-        // if (instructionObject != null)
-        // {
-        //     instruction = instructionObject.GetComponent<InstructionScript>();
-        // }
-
-        // // Ensure the script is found before trying to call its methods
-        // if (instruction != null)
-        // {
-        //     instruction.postBulletPoints("Procedure", "Locate the solvent cabinet", "-Hint: flammable, yellow");
-        // }
-        // else
-        // {
-        //     Debug.LogError("InstructionScript not found!");
-        // }
-
-        // notebookObject = GameObject.Find("Notebook");
-
-        // if (notebookObject != null)
-        // {
-        //     notebook = notebookObject.GetComponent<NotebookScript>();
-        // }
+        if (instructionObject != null)
+        {
+            instruction = instructionObject.GetComponent<InstructionScript>();
+        }
 
         // Ensure the script is found before trying to call its methods
-        // if (notebook != null)
-        // {
-        //     notebook.postText("Instrument Parameters");
-        // }
-        // else
-        // {
-        //     Debug.LogError("NotebookScript not found!");
-        // }
+        if (instruction != null)
+        {
+            instruction.postBulletPoints("Procedure", "Locate the solvent cabinet", "-Hint: flammable, yellow");
+        }
+        else
+        {
+            Debug.LogError("InstructionScript not found!");
+        }
+
+        GameObject notebookObject = GameObject.Find("Notebook");
+
+        if (notebookObject != null)
+        {
+            notebook = notebookObject.GetComponent<NotebookScript>();
+        }
+
+        // Ensure the script is found before trying to call its methods
+        if (notebook != null)
+        {
+            notebook.postText("Instrument Parameters");
+        }
+        else
+        {
+            Debug.LogError("NotebookScript not found!");
+        }
 
         currentStep = GameStep.Start;
-        hud_text.text = "Welcome to the HPLC Lab!";
+        hud_text.text = "Welcome to the HPLC Laxb!";
         vrTextPanel = FindObjectOfType<VrTextPanel>();
         startBtn = FindAnyObjectByType<StartBtn>();
 
@@ -117,7 +116,7 @@ public class HplcSceneScript : MonoBehaviour
                 if (startBtn.start){
                     vrTextPanel.CardMoveTo((int)TextLocation.FireCabinetAndComputer);
                     Debug.Log("move");
-
+                    // hud_text.text = "open flame";
                     CompleteStep(GameStep.OpenFireCabinet, "Open the flammable solvent cabinet to obtain your mobile");
                 }
             break;
@@ -125,26 +124,26 @@ public class HplcSceneScript : MonoBehaviour
                 if (IsFireCabinetOpened())
                 {
                     CompleteStep(GameStep.BringWaterToHplc, "Bring the water to the HPLC");
-                    // instruction.postBulletPointWithTab("Select the polar solvent and bring over to the A slot in the rack atop the HPLC");
+                    instruction.postBulletPointWithTab("Select the polar solvent and bring over to the A slot in the rack atop the HPLC");
                     
-                    // instruction.postBulletPointWithTab("-Hint: aqueous");
+                    instruction.postBulletPointWithTab("-Hint: aqueous");
                 }
                 break;
                 
             case GameStep.BringWaterToHplc:
-                if (ChildrenInParent("Left Slot") == 1)
+                if (IsRbObjectSet("Solvent Bottle Water"))
                 {
                     CompleteStep(GameStep.BringMethanolToHplc, "Bring the methanol to the HPLC");
-                    // instruction.postBulletPointWithTab("Select the organic solvent from the cabinet and move to the B slot in the rack");
+                    instruction.postBulletPointWithTab("Select the organic solvent from the cabinet and move to the B slot in the rack");
                     // notebook.postText("\nPolar Sol. A: Water");
                 }
                 break;
             case GameStep.BringMethanolToHplc:
-                if (ChildrenInParent("Right Slot") == 1)
+                if (IsRbObjectSet("Solvent Bottle Methanol"))
                 {
                     vrTextPanel.CardMoveTo((int)TextLocation.HPLC);
                     CompleteStep(GameStep.OpenHplcOven, "Open the HPLC column compartment");
-                    // instruction.postBulletPointWithTab("Equip the HPLC with the C18 column from the drawer below the computer", "-Hint: Pre-Column comes first");
+                    instruction.postBulletPointWithTab("Equip the HPLC with the C18 column from the drawer below the computer", "-Hint: Pre-Column comes first");
                     // notebook.postText("\nOrganic Sol. B: Methanol");
                 }
                 break;
@@ -165,7 +164,7 @@ public class HplcSceneScript : MonoBehaviour
                 if (ChildrenInParent("Column Latches") == 1)
                 {
                     CompleteStep(GameStep.SelectProperFlowDirection, "Select the proper flow direction");
-                    // instruction.postText("Press M to bring up Notebook to do KnowledgeCheck1");
+                    instruction.postText("Press M to bring up Notebook to do KnowledgeCheck1");
                 }
                 break;
             case GameStep.SelectProperFlowDirection:
@@ -310,7 +309,7 @@ public class HplcSceneScript : MonoBehaviour
                 }
                 break;
             case GameStep.Done:
-                // Debug.Log("done 1");
+                Debug.Log("done 1");
                 confetti.StartConfetti("Congratulations you finished the module! Use the notebook to return to the home screen", 10);
                 break;
 
@@ -515,8 +514,9 @@ public class HplcSceneScript : MonoBehaviour
         if (instruction != null)
         {
             // instruction.postBulletPoints("Procedure", instructionMessage);
-            hud_text.text = instructionMessage;
+            
         }
+        hud_text.text = instructionMessage;
     }
 
     private IEnumerator Wait(float secondsWaiting)
