@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class SnapFromHand : MonoBehaviour
 {
@@ -27,8 +28,17 @@ public class SnapFromHand : MonoBehaviour
 
 
             // Destroy Rb
+            GameObject XROrigin = GameObject.Find("XR Origin (XR Rig) Variant");
             Rigidbody rb = inputObject.GetComponent<Rigidbody>();
-            Destroy(rb);
+
+            if (rb != null) {
+                UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable inputObjectXRComponent = inputObject.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+                if (inputObjectXRComponent != null) {
+                    Destroy(inputObjectXRComponent);
+                }
+                Destroy(rb);
+            }
+        
 
             // Set object
             inputObject.transform.rotation = lockPosition.rotation;

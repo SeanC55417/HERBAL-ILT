@@ -6,8 +6,14 @@ public class ClickIntoPlace : MonoBehaviour
 {
     public void clickInPlace(GameObject destinationParent)
     {
+        GameObject XROrigin = GameObject.Find("XR Origin (XR Rig) Variant");
+
         Rigidbody rb = gameObject.GetComponent<Rigidbody>();
-        Destroy(rb);
+        if (rb != null && XROrigin && XROrigin.activeSelf) {
+            Debug.Log("Destorying rb");
+            Destroy(rb);
+        }
+        
 
         Collider collider = gameObject.GetComponent<Collider>();            
         collider.enabled = false;

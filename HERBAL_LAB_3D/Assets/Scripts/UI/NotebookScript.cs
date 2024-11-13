@@ -90,6 +90,9 @@ public class NotebookScript : MonoBehaviour
         bool overflow = false;
         do
         {
+            // if (currentContainer == null) {
+            //     InstantiateTextBox();
+            // }
             int lastChildIndex = currentContainer.transform.childCount - 1;
             
             if (lastChildIndex == -1)

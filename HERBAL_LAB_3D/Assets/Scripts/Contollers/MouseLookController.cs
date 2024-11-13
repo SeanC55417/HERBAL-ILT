@@ -138,7 +138,7 @@ public class MouseLookController : MonoBehaviour
             }
         }
 
-        Debug.Log(hitObject.name);
+        // Debug.Log(hitObject.name);
         if (itemsWithDescriptionsSet != null && itemsWithDescriptionsSet.Contains(hitObject.name))
         {
             if (itemsWithDescriptionsSet.Contains(hitObject.name))
@@ -146,7 +146,7 @@ public class MouseLookController : MonoBehaviour
                 showLabel(hitObject);
             }
         }
-        else if (itemsWithDescriptionsSet != null && itemsWithDescriptionsSet.Contains(hitObject.transform.parent.name))
+        else if (itemsWithDescriptionsSet != null && hitObject.transform.parent != null && itemsWithDescriptionsSet.Contains(hitObject.transform.parent.name))
         {
             if (itemsWithDescriptionsSet.Contains(hitObject.name))
             {
