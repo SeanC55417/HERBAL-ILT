@@ -173,7 +173,7 @@ public class QuestionScript : MonoBehaviour
             buttonImage.color = colors.selectedColor;
             Debug.Log("correct");
             questionsAnswered += 1;
-            
+            Wait(0.5f);
         }
         else
         {

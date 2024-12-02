@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: b3fc5a0bfc22848f2951b2b49ad38090, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: ec46d2188d4b8774e847e75f1e12a8db, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1340554, g: 0.2352365, b: 0.3511622, a: 1}
+  m_IndirectSpecularColor: {r: 0.3129884, g: 0.5499715, b: 0.8211994, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6136,6 +6136,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 112174807}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &112174810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6278,6 +6290,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 112174807}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
@@ -7033,6 +7057,107 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 158183484}
   m_CullTransparentMesh: 1
+--- !u!21 &160179275
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LiquidVolumeDefaultNoFlask(Clone)
+  m_Shader: {fileID: 4800000, guid: 045a60f5db3314d55b5609a847d062a8, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - LIQUID_VOLUME_IRREGULAR
+  - LIQUID_VOLUME_NON_AABB
+  m_InvalidKeywords:
+  - 
+  - 
+  - 
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3001
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Noise2Tex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 11700000, guid: 41974beaaddc547889b39d0022cb1d07, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex2D:
+        m_Texture: {fileID: 2800000, guid: 2e25f51e1f31e4da8bdac5d08b0f578f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Alpha: 1
+    - _AlphaCombined: 0.42352942
+    - _BasePos: -1
+    - _CullMode: 2
+    - _DeepAtten: 2
+    - _DoubleSidedBias: 0.001
+    - _FinalAlphaMultiplier: 1
+    - _FlaskBlurIntensity: 0
+    - _FlaskThickness: 0.05
+    - _FoamBottom: 0
+    - _FoamDensity: -1
+    - _FoamMaxPos: 1.9160006
+    - _FoamRaySteps: 1
+    - _FoamTurbulence: 0
+    - _FoamWeight: 4
+    - _Glossiness: 0.073
+    - _GlossinessInt: 0.5
+    - _Level: 1
+    - _LevelPos: 1.9160006
+    - _LiquidRaySteps: 10
+    - _LowerLimit: -3.4028235e+38
+    - _Metallic: 0
+    - _Muddy: 0
+    - _Radius: 0.5
+    - _SmokeAtten: 2
+    - _SmokeHeightAtten: 0
+    - _SmokeRaySteps: 1
+    - _SmokeSpeed: 5
+    - _Sparkling: 1
+    - _SparklingIntensity: 0
+    - _SparklingThreshold: 1
+    - _Topology: 0
+    - _Turbulence: 1
+    - _Turbulence2: 1
+    - _TurbulenceSpeed: 1
+    - _UpperLimit: 3.4028235e+38
+    - _ZTestMode: 4
+    m_Colors:
+    - _Bounds: {r: 1, g: 1, b: 1, a: 1}
+    - _Center: {r: 0.3699994, g: 1.8674005, b: 9.0874, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color1: {r: 0, g: 0.5151288, b: 0.990566, a: 0.105882354}
+    - _Color2: {r: 1, g: 0.9858491, b: 0.9858491, a: 0}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
+    - _FlaskColor: {r: 1, g: 1, b: 1, a: 0}
+    - _FlaskThickness: {r: 1, g: 1, b: 1, a: 0}
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 0.65}
+    - _GlossinessInternal: {r: 13.288, g: 1, b: 0, a: 0}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Scale: {r: 1.3888878, g: 0.05555551, b: 5.555551, a: 27.777756}
+    - _Size: {r: 0.9117014, g: 0.36000028, b: 0.7000002, a: 0.23000003}
+    - _SmokeColor: {r: 0.7, g: 0.7, b: 0.7, a: 0}
+    - _Turbulence: {r: 0.5, g: 0.2, b: 9.424778, a: 3.1415927}
+    - _ViewDir: {r: 0, g: 0, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!1 &166208161
 GameObject:
   m_ObjectHideFlags: 0
@@ -8403,6 +8528,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 350, y: 250}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &296761484 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2832294700939742708, guid: 5e93c74ff64ba431ca555a39c5a565d4, type: 3}
+  m_PrefabInstance: {fileID: 1733992655125571928}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 485bf4ec5c381437cabec4a899007cd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &312181886
 GameObject:
   m_ObjectHideFlags: 0
@@ -9923,6 +10059,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 459905885}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &459905889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10044,6 +10192,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 459905885}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
@@ -17304,15 +17464,15 @@ RectTransform:
   m_GameObject: {fileID: 1148311420}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1469750130}
+  m_Father: {fileID: 1663896938}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6.990017, y: 37.799988}
-  m_SizeDelta: {x: 1329.5, y: 614.3}
+  m_AnchoredPosition: {x: 0, y: 10}
+  m_SizeDelta: {x: 900, y: 484.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1148311422
 MonoBehaviour:
@@ -20199,7 +20359,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 677602582}
-  - {fileID: 1148311421}
   m_Father: {fileID: 915764227}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -22541,6 +22700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questionScript: {fileID: 506078157}
+  notebook: {fileID: 1663896939}
   hud_text: {fileID: 1953863702}
   confetti: {fileID: 1598408366}
 --- !u!4 &1613836981
@@ -22661,107 +22821,6 @@ MonoBehaviour:
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
---- !u!21 &1615892751
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: LiquidVolumeDefaultNoFlask(Clone)
-  m_Shader: {fileID: 4800000, guid: 045a60f5db3314d55b5609a847d062a8, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - LIQUID_VOLUME_IRREGULAR
-  - LIQUID_VOLUME_NON_AABB
-  m_InvalidKeywords:
-  - 
-  - 
-  - 
-  m_LightmapFlags: 5
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3001
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Noise2Tex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NoiseTex:
-        m_Texture: {fileID: 11700000, guid: 41974beaaddc547889b39d0022cb1d07, type: 2}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NoiseTex2D:
-        m_Texture: {fileID: 2800000, guid: 2e25f51e1f31e4da8bdac5d08b0f578f, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _Alpha: 1
-    - _AlphaCombined: 0.42352942
-    - _BasePos: -1
-    - _CullMode: 2
-    - _DeepAtten: 2
-    - _DoubleSidedBias: 0.001
-    - _FinalAlphaMultiplier: 1
-    - _FlaskBlurIntensity: 0
-    - _FlaskThickness: 0.05
-    - _FoamBottom: 0
-    - _FoamDensity: -1
-    - _FoamMaxPos: 1.9160006
-    - _FoamRaySteps: 1
-    - _FoamTurbulence: 0
-    - _FoamWeight: 4
-    - _Glossiness: 0.073
-    - _GlossinessInt: 0.5
-    - _Level: 1
-    - _LevelPos: 1.9160006
-    - _LiquidRaySteps: 10
-    - _LowerLimit: -3.4028235e+38
-    - _Metallic: 0
-    - _Muddy: 0
-    - _Radius: 0.5
-    - _SmokeAtten: 2
-    - _SmokeHeightAtten: 0
-    - _SmokeRaySteps: 1
-    - _SmokeSpeed: 5
-    - _Sparkling: 1
-    - _SparklingIntensity: 0
-    - _SparklingThreshold: 1
-    - _Topology: 0
-    - _Turbulence: 1
-    - _Turbulence2: 1
-    - _TurbulenceSpeed: 1
-    - _UpperLimit: 3.4028235e+38
-    - _ZTestMode: 4
-    m_Colors:
-    - _Bounds: {r: 1, g: 1, b: 1, a: 1}
-    - _Center: {r: 0.3699994, g: 1.8674005, b: 9.0874, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 0, g: 0.5151288, b: 0.990566, a: 0.105882354}
-    - _Color2: {r: 1, g: 0.9858491, b: 0.9858491, a: 0}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
-    - _FlaskColor: {r: 1, g: 1, b: 1, a: 0}
-    - _FlaskThickness: {r: 1, g: 1, b: 1, a: 0}
-    - _FoamColor: {r: 1, g: 1, b: 1, a: 0.65}
-    - _GlossinessInternal: {r: 13.288, g: 1, b: 0, a: 0}
-    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Scale: {r: 1.3888878, g: 0.05555551, b: 5.555551, a: 27.777756}
-    - _Size: {r: 0.9117014, g: 0.36000028, b: 0.7000002, a: 0.23000003}
-    - _SmokeColor: {r: 0.7, g: 0.7, b: 0.7, a: 0}
-    - _Turbulence: {r: 0.5, g: 0.2, b: 9.424778, a: 3.1415927}
-    - _ViewDir: {r: 0, g: 0, b: 1, a: 1}
-  m_BuildTextureStacks: []
 --- !u!1 &1631921241
 GameObject:
   m_ObjectHideFlags: 0
@@ -23251,12 +23310,13 @@ RectTransform:
   - {fileID: 206382836}
   - {fileID: 1522651726}
   - {fileID: 253291917}
+  - {fileID: 1148311421}
   m_Father: {fileID: 915764227}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 900, y: 1080}
+  m_AnchoredPosition: {x: 0, y: 0.69999695}
+  m_SizeDelta: {x: 900, y: 484.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1663896939
 MonoBehaviour:
@@ -28744,6 +28804,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 729843026637802604, guid: 5e93c74ff64ba431ca555a39c5a565d4, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 296761484}
+    - target: {fileID: 729843026637802604, guid: 5e93c74ff64ba431ca555a39c5a565d4, type: 3}
+      propertyPath: m_SelectEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: OpenFireCabinet, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 893920913443992404, guid: 5e93c74ff64ba431ca555a39c5a565d4, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -28831,7 +28899,7 @@ PrefabInstance:
     - target: {fileID: 5376858121889131240, guid: 5e93c74ff64ba431ca555a39c5a565d4, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 1615892751}
+      objectReference: {fileID: 160179275}
     - target: {fileID: 5443345673666166185, guid: 5e93c74ff64ba431ca555a39c5a565d4, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -28923,6 +28991,10 @@ PrefabInstance:
     - target: {fileID: 8871372005594959107, guid: 5e93c74ff64ba431ca555a39c5a565d4, type: 3}
       propertyPath: m_Name
       value: Structure
+      objectReference: {fileID: 0}
+    - target: {fileID: 9203962055586525212, guid: 5e93c74ff64ba431ca555a39c5a565d4, type: 3}
+      propertyPath: m_Intensity
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3004234083610673436, guid: 5e93c74ff64ba431ca555a39c5a565d4, type: 3}

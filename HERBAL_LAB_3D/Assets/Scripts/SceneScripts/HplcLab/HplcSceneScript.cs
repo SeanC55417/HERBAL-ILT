@@ -53,43 +53,19 @@ public class HplcSceneScript : MonoBehaviour
     }
     
     private StartBtn startBtn;
-    private InstructionScript instruction;
     public QuestionScript questionScript;
-    private NotebookScript notebook;
+    public NotebookScript notebook;
     private GameStep currentStep;
     private GameObject computerScreen = null;
 
     public TextMeshProUGUI hud_text;
     public Confetti confetti;
     private VrTextPanel vrTextPanel;
+    private float waitTimeAfterCorrectAnswer = 0.5f;
    
 
     void Start()
     {
-        // Find the instructionObject GameObject and get the InstructionScript component
-        GameObject instructionObject = GameObject.Find("Instructions");
-
-        if (instructionObject != null)
-        {
-            instruction = instructionObject.GetComponent<InstructionScript>();
-        }
-
-        // Ensure the script is found before trying to call its methods
-        if (instruction != null)
-        {
-            instruction.postBulletPoints("Procedure", "Locate the solvent cabinet", "-Hint: flammable, yellow");
-        }
-        else
-        {
-            Debug.LogError("InstructionScript not found!");
-        }
-
-        GameObject notebookObject = GameObject.Find("Notebook");
-
-        if (notebookObject != null)
-        {
-            notebook = notebookObject.GetComponent<NotebookScript>();
-        }
 
         // Ensure the script is found before trying to call its methods
         if (notebook != null)
@@ -102,7 +78,7 @@ public class HplcSceneScript : MonoBehaviour
         }
 
         currentStep = GameStep.Start;
-        hud_text.text = "Welcome to the HPLC Laxb!";
+        hud_text.text = "Welcome to the HPLC Lab!";
         vrTextPanel = FindObjectOfType<VrTextPanel>();
         startBtn = FindAnyObjectByType<StartBtn>();
 
@@ -115,8 +91,6 @@ public class HplcSceneScript : MonoBehaviour
             case GameStep.Start:
                 if (startBtn.start){
                     vrTextPanel.CardMoveTo((int)TextLocation.FireCabinetAndComputer);
-                    Debug.Log("move");
-                    // hud_text.text = "open flame";
                     CompleteStep(GameStep.OpenFireCabinet, "Open the flammable solvent cabinet to obtain your mobile");
                 }
             break;
@@ -124,9 +98,6 @@ public class HplcSceneScript : MonoBehaviour
                 if (IsFireCabinetOpened())
                 {
                     CompleteStep(GameStep.BringWaterToHplc, "Bring the water to the HPLC");
-                    instruction.postBulletPointWithTab("Select the polar solvent and bring over to the A slot in the rack atop the HPLC");
-                    
-                    instruction.postBulletPointWithTab("-Hint: aqueous");
                 }
                 break;
                 
@@ -134,8 +105,7 @@ public class HplcSceneScript : MonoBehaviour
                 if (IsRbObjectSet("Solvent Bottle Water"))
                 {
                     CompleteStep(GameStep.BringMethanolToHplc, "Bring the methanol to the HPLC");
-                    instruction.postBulletPointWithTab("Select the organic solvent from the cabinet and move to the B slot in the rack");
-                    // notebook.postText("\nPolar Sol. A: Water");
+                    notebook.postText("\nPolar Sol. A: Water");
                 }
                 break;
             case GameStep.BringMethanolToHplc:
@@ -143,8 +113,7 @@ public class HplcSceneScript : MonoBehaviour
                 {
                     vrTextPanel.CardMoveTo((int)TextLocation.HPLC);
                     CompleteStep(GameStep.OpenHplcOven, "Open the HPLC column compartment");
-                    instruction.postBulletPointWithTab("Equip the HPLC with the C18 column from the drawer below the computer", "-Hint: Pre-Column comes first");
-                    // notebook.postText("\nOrganic Sol. B: Methanol");
+                    notebook.postText("\nOrganic Sol. B: Methanol");
                 }
                 break;
             case GameStep.OpenHplcOven:
@@ -157,14 +126,12 @@ public class HplcSceneScript : MonoBehaviour
                 if (IsColumnDrawerOpen())
                 {
                     CompleteStep(GameStep.PlaceColumnInHplc, "Place the column inside the column compartment");
-                    // notebook.postText("Column: Phenomenex Kinetex C18 (4.6 x 150 mm) 100 Å");
                 }
                 break;
             case GameStep.PlaceColumnInHplc:
                 if (ChildrenInParent("Column Latches") == 1)
                 {
                     CompleteStep(GameStep.SelectProperFlowDirection, "Select the proper flow direction");
-                    instruction.postText("Press M to bring up Notebook to do KnowledgeCheck1");
                 }
                 break;
             case GameStep.SelectProperFlowDirection:
@@ -183,12 +150,14 @@ public class HplcSceneScript : MonoBehaviour
                 break;
             case GameStep.KnowledgeCheck1Q1:
                 if (questionScript.getNumAnswered() > 0){
+                    Wait(waitTimeAfterCorrectAnswer);
                     CompleteStep(GameStep.KnowledgeCheck1Q2, "Great Job!");
                     questionScript.PostQuestion("Question2");
                 }
                 break;
             case GameStep.KnowledgeCheck1Q2:
                 if (questionScript.getNumAnswered() > 1){
+                    Wait(waitTimeAfterCorrectAnswer);
                     CompleteStep(GameStep.OpenHplcTraySlot, "Open HPLC vial rack");
                     questionScript.deactivateQuestionPanel();
                 }
@@ -229,12 +198,14 @@ public class HplcSceneScript : MonoBehaviour
                 break;
             case GameStep.KnowledgeCheck2Q1:
                 if (questionScript.getNumAnswered() > 2){
+                    Wait(waitTimeAfterCorrectAnswer);
                     CompleteStep(GameStep.KnowledgeCheck2Q2, "");
                     questionScript.PostQuestion("Question4");
                 }
                 break;
             case GameStep.KnowledgeCheck2Q2:
                 if (questionScript.getNumAnswered() > 3){
+                    Wait(waitTimeAfterCorrectAnswer);
                     questionScript.deactivateQuestionPanel();
                     CompleteStep(GameStep.SelectPump, "Awesome!\nRefer back to the HPLC computer screen and press pump “ON” to begin equilibrating your column");
                     GameObject pumpButton = GameObject.Find("Pump Button");
@@ -510,12 +481,6 @@ public class HplcSceneScript : MonoBehaviour
         Debug.Log($"Step {currentStep} completed. Proceed to: {nextStep}");
         currentStep = nextStep;
 
-        // Post the next instruction
-        if (instruction != null)
-        {
-            // instruction.postBulletPoints("Procedure", instructionMessage);
-            
-        }
         hud_text.text = instructionMessage;
     }
 
